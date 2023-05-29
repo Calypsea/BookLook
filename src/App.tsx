@@ -16,7 +16,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Sup you
+          Sup you losers
         </a>
       </header>
     </div>
