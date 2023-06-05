@@ -1,0 +1,110 @@
+.browseBody
+{
+    padding-top: 6vh; 
+    text-align: left;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 80%;
+}
+.formContainer
+{ 
+    background-color: #342B32;
+    padding: 40px;
+    border-radius: 0 0 20px 20px;
+}
+.authorKeywordContainer, .formLangContainer, .advancedSearch, .titleInput, .genresWrap
+{
+    display: flex;
+    flex-direction: column;
+}
+.topFormContainer
+{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+.genresContainer .genreInput
+{
+    width: 90px;
+}
+.primaryInput
+{
+    height: 40px;
+    border-radius: 8px;
+    border: 0px;
+    font-size: 0.9rem;
+    width: 300px;
+    padding: 10px;
+}
+.primaryInput:active, .primaryInput:focus
+{
+    outline: 2px solid #E48AD2;
+}
+label
+{
+    margin: 14px 0px;
+    font-size: 0.9rem;
+}
+.formLangContainer select
+{
+    width: 140px;
+}
+.titleContainer
+{
+    display: flex;
+    margin-bottom: 40px;
+    
+}
+.titleContainer button
+{
+    all: unset;
+    align-self: flex-start;
+    margin-top: 60px;
+    margin-left: 40px;
+    
+}
+.arrow
+{
+    margin-left: 0.3rem;
+}
+.links
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.links a
+{
+    text-decoration: none;   
+    color: white;
+    font-size: 1.4rem;
+    padding: 15px 30px;
+    /* separate class */
+    /* background-color: #342B32; */
+}
+.links a:hover
+{
+    color: #E48AD2;
+}
+.browseBody h2
+{
+    margin-bottom: 10vh;
+}
+.genresContainer
+{
+    display: flex;
+}
+.plusIcon
+{
+    margin-top: 62px;
+    margin-left: 14px;
+}
+.searchIcon
+{
+    margin-top: 57px;
+    margin-left: 14px;
+}
+.formButton
+{
+    margin: 40px auto 10px auto;
+}
