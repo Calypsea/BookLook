@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import './App.css';
+import {ThemeProvider} from './Components/context/ViewMode'
+
 import Header from './Components/Header'
 import HomeBody from './Components/HomeBody';
 import About from './Components/About';
@@ -12,17 +14,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
+ 
+  
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/BookLook" element={<Layout />}>
-          <Route index element={<HomeBody />} />
-          <Route path="about" element={<About />} />
-          <Route path="browse" element={<Browse />} />
-        
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/BookLook" element={<Layout />}>
+            <Route index element={<HomeBody />} />
+            <Route path="about" element={<About />} />
+            <Route path="browse" element={<Browse />} />
+      
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

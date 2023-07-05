@@ -1,13 +1,18 @@
+import React, {useContext} from 'react'
 import "./About.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom"
+import { ThemeContext } from "./context/ViewMode";
 
 export default function About() {
+
+  const {mode} = useContext(ThemeContext)
+
   return (
-    <main>
+    <main id={mode}>
         <div className="homePageHeader aboutPageHeader">
           <h1>
             Are you an avid book reader?
@@ -30,14 +35,14 @@ export default function About() {
             </li>
           </ul>
           <div className="buttonContainer">
-            <Link to="/BookLook/browse" className="primaryButton">
+            <Link to="/BookLook/browse" className={`primaryButton button${mode}`}>
               Browse
               <FontAwesomeIcon
                 icon={faArrowUp}
                 className="primaryButtonArrow arrowUp"
               />
             </Link>
-            <Link to="/BookLook/" className="primaryButton">
+            <Link to="/BookLook/" className={`primaryButton button${mode}`}>
               Sign Up
               <FontAwesomeIcon
                 icon={faArrowRight}

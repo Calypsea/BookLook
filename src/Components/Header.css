@@ -3,19 +3,15 @@ header
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #151114;
-    padding: 15px 50px;
     
+    padding: 10px 50px;
 }
 .link
 {
     text-decoration: none;
     color: white;
     font-size: 1.2rem;
-}
-.link:hover
-{
-    color: #E48AD2;
+    padding-bottom: 4px;
 }
 .rightSideNavigation
 {
@@ -32,7 +28,6 @@ header
     line-height: 1.7rem;
     letter-spacing: 0em;
     text-align: left;
-    color:#E48AD2;
 }
 nav
 {
@@ -64,4 +59,54 @@ nav
 #dropDown .DropdownMenu:active
 {
     background-color: #E48AD2;
+}
+.activelight
+{
+    border-bottom: 2px solid #692E5D;
+    color:#692E5D;
+}
+.activedark
+{
+    border-bottom: 2px solid #E48AD2;
+    color:#E48AD2;
+}
+.headerlight
+{
+    background-color: #D5C9D2;
+    
+}
+.headerdark
+{
+    background-color: #151114;
+   
+}
+.headlight p
+{
+    color: #692E5D;
+}
+.headdark p
+{
+    color: #E48AD2;
+}
+.linklight:hover
+{
+    color: #692E5D;
+}
+.linkdark:hover
+{
+    color: #E48AD2;
+}
+.displayButton
+{
+    all: unset;
+    border-radius: 45px;
+    background-color: #BFA8A8;
+    padding: 5px 8px;
+    display: flex;
+    gap: 10px;
+}
+.displayMode
+{
+    align-self: center;
+    margin-right: 30px;
 }

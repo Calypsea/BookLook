@@ -6,9 +6,15 @@
     margin: 0 auto;
     width: 80%;
 }
-.formContainer
+.formContainerdark
 { 
     background-color: #342B32;
+    padding: 40px;
+    border-radius: 0 0 20px 20px;
+}
+.formContainerlight
+{ 
+    background-color: #D5C9D2;
     padding: 40px;
     border-radius: 0 0 20px 20px;
 }
@@ -16,6 +22,7 @@
 {
     display: flex;
     flex-direction: column;
+    
 }
 .topFormContainer
 {
@@ -26,6 +33,24 @@
 .genresContainer .genreInput
 {
     width: 90px;
+}
+.genreInput
+{
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.deleteButton
+{
+    all:unset;
+    color: red;
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    
+}
+.genreInputParent
+{
+    position:relative;
 }
 .primaryInput
 {
@@ -60,7 +85,13 @@ label
     all: unset;
     align-self: flex-start;
     margin-top: 60px;
-    margin-left: 40px;
+    margin-left: 15px;
+    
+}
+#advancedSearch
+{
+    
+    margin-left: 55px;
     
 }
 .arrow
@@ -73,18 +104,36 @@ label
     flex-direction: row;
     justify-content: space-between;
 }
-.links a
+.links button
 {
-    text-decoration: none;   
-    color: white;
+    all:unset;  
     font-size: 1.4rem;
     padding: 15px 30px;
-    /* separate class */
-    /* background-color: #342B32; */
 }
-.links a:hover
+.linkHoverlight
+{
+    color: #716666;
+}
+.linkHoverlight:hover
+{
+    color: #692E5D;
+}
+.linkHoverdark:hover
 {
     color: #E48AD2;
+}
+
+.links .currentlyOpendark
+{
+    background-color: #342B32;
+    border-radius: 20px 20px 0 0;
+    color: #E48AD2;
+}
+.links .currentlyOpenlight
+{
+    background-color: #D5C9D2;
+    border-radius: 20px 20px 0 0;
+    color: #692E5D;
 }
 .browseBody h2
 {
@@ -93,18 +142,64 @@ label
 .genresContainer
 {
     display: flex;
+    width: 515px;
+    
 }
 .plusIcon
 {
     margin-top: 62px;
-    margin-left: 14px;
-}
-.searchIcon
-{
-    margin-top: 57px;
-    margin-left: 14px;
+ 
+   
 }
 .formButton
 {
     margin: 40px auto 10px auto;
+}
+.hidden
+{
+    display: none;
+}
+.renderedInputs
+{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.warningText
+{
+    color: red;
+    font-size: 0.85rem;
+}
+.genreButton
+{
+    border-radius: 45px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.300);
+    margin:6px 12px 6px 0;
+    padding: 6px 13px;
+}
+.genreButton:hover
+{
+    background-color: #6D626C;
+    color: white;
+}
+.two
+{
+    text-align: center;
+    padding-top: 50px;
+    font-size: 1.1rem;
+}
+.light 
+{
+    background-color: #F1EAF0;
+    color: #3f3939;
+}
+.light:hover
+{
+    background-color: #c79ec1;
+    color: white;
+}
+.dark 
+{
+    background-color: #2E252D;
 }
