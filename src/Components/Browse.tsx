@@ -9,10 +9,12 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Genre from "./Genre";
-import Book from "./Book"
+import Book from "./Book";
 import { ThemeContext } from "./context/ViewMode";
+import LoadingSpinner from "./Spinner";
 
 export default function Browse() {
+  
   const { mode } = useContext(ThemeContext);
 
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
@@ -52,10 +54,9 @@ export default function Browse() {
     favourite: boolean;
   }
 
-
   React.useEffect(() => {
     if (bookData.length > 0) {
-      let booksArray: Book[]= bookData.map((obj) => {
+      let booksArray: Book[] = bookData.map((obj) => {
         const {
           title,
           subtitle,
@@ -87,38 +88,32 @@ export default function Browse() {
           language: language,
           favourite: false,
         };
-
       });
-      let displayBooks = booksArray.map(book => {
-        return(
-          <Book 
-            key={book.id}
-            book={book}
-          />
-        )
-      })
-      setDisplayBooks(displayBooks)
-      
+      let displayBooks = booksArray.map((book) => {
+        return <Book key={book.id} book={book} />;
+      });
+      setDisplayBooks(displayBooks);
     }
   }, [bookData]);
   
- 
-
-  const API_KEY: string = "AIzaSyAXtSON89EeDW8oqw75ThaUdC9q6sw2WoU";
+  const API_KEY: string | undefined = process.env.REACT_APP_RAPID_API_KEY;
   const BASE_URL: string = "https://www.googleapis.com/books/";
 
   function handleAdvancedSearch() {
     setIsAdvancedSearch((prev) => !prev);
   }
- 
+
   async function fetchBooks() {
     try {
-      setIsLoading(true)
-      const query:string = formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
-      const authorQuery:string = formData.bookAuthor !== "" ? `+inauthor:${formData.bookAuthor}` : ''
+      setIsLoading(true);
+      const query: string =
+        formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
+      const authorQuery: string =
+        formData.bookAuthor !== "" ? `+inauthor:${formData.bookAuthor}` : "";
+
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${query}` +
-        authorQuery +
+          authorQuery +
           //`+subject:${formData.genres}`+
           `&maxResults=20` +
           `&langRestrict=${formData.language}` +
@@ -153,7 +148,7 @@ export default function Browse() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     handleGenreInput();
-    
+
     fetchBooks();
   }
 
@@ -271,24 +266,20 @@ export default function Browse() {
   function handleSelectedGenres(selectedGenres: string[]) {
     setSelectedGenres(selectedGenres);
   }
-  let selectedGenresString =  selectedGenres.join(", ")
+  let selectedGenresString = selectedGenres.join(", ");
 
-  async function handleFilterSearch()
-  {
-    try
-    {
-      setIsLoading(true)
+  async function handleFilterSearch() {
+    try {
+      setIsLoading(true);
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${selectedGenresString}` +
-        `&maxResults=20` +
-        `&key=${API_KEY}`
+          `&maxResults=20` +
+          `&key=${API_KEY}`
       );
       const data = await response.json();
       setBookData(data.items);
-      setIsLoading(false)
-    }
-    catch (error) 
-    {
+      setIsLoading(false);
+    } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
@@ -448,16 +439,18 @@ export default function Browse() {
               <div className={`formContainer${mode} two`}>
                 <p>What do you look for in a book?</p>
                 <Genre onSelection={handleSelectedGenres} />
-                <button onClick={handleFilterSearch} className={`primaryButton formButton button${mode}`}>
+                <button
+                  onClick={handleFilterSearch}
+                  className={`primaryButton formButton button${mode}`}
+                >
                   Search
                 </button>
               </div>
               {/* {filterElements} */}
             </section>
           )}
-          {isLoading ? "loading.." : displayBooks}
-          
-        
+          <p>Results per page: 20</p>
+          {isLoading ? <LoadingSpinner /> : displayBooks}
         </div>
       </div>
     </main>
