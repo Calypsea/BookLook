@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Booklook/static/css/main.cb951e34.css",
+    "main.js": "/Booklook/static/js/main.959d7f42.js",
+    "static/js/787.b457f604.chunk.js": "/Booklook/static/js/787.b457f604.chunk.js",
+    "index.html": "/Booklook/index.html",
+    "main.cb951e34.css.map": "/Booklook/static/css/main.cb951e34.css.map",
+    "main.959d7f42.js.map": "/Booklook/static/js/main.959d7f42.js.map",
+    "787.b457f604.chunk.js.map": "/Booklook/static/js/787.b457f604.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cb951e34.css",
+    "static/js/main.959d7f42.js"
+  ]
+}
