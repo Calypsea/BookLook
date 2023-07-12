@@ -15,7 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
  
-  
+  //https://stackoverflow.com/questions/71984401/react-router-not-working-with-github-pages
   return (
     <ThemeProvider>
       <HashRouter>

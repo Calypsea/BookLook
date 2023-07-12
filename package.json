@@ -1,7 +1,7 @@
 {
   "name": "booklook",
   "version": "0.1.0",
-  "homepage": "https://Calypsea.github.io/BookLook/#",
+  "homepage": "https://Calypsea.github.io/BookLook",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
