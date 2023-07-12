@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom"
 
 import './App.css';
 import {ThemeProvider} from './Components/context/ViewMode'
@@ -18,7 +18,7 @@ function App() {
   
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/BookLook" element={<Layout />}>
             <Route index element={<HomeBody />} />
@@ -27,7 +27,7 @@ function App() {
       
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter >
     </ThemeProvider>
   );
 }
