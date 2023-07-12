@@ -20,11 +20,10 @@ function App() {
     <ThemeProvider>
       <HashRouter>
         <Routes>
-          <Route path="/BookLook" element={<Layout />}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<HomeBody />} />
             <Route path="about" element={<About />} />
             <Route path="browse" element={<Browse />} />
-      
           </Route>
         </Routes>
       </HashRouter >
