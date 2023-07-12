@@ -19,6 +19,7 @@ function App() {
   return (
     <ThemeProvider>
       <HashRouter>
+
         <Routes>
           <Route path="/BookLook" element={<Layout />}>
             <Route index element={<HomeBody />} />
@@ -26,6 +27,7 @@ function App() {
             <Route path="browse" element={<Browse />} />
           </Route>
         </Routes>
+        
       </HashRouter >
     </ThemeProvider>
   );

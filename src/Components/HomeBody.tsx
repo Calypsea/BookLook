@@ -18,7 +18,7 @@ export default function HomeBody() {
             people have to say, all in one place!
             
           </p>
-          Testing testing testing
+          
           <Link to="/BookLook/browse" className={`primaryButton buttonLink button${mode} `} >
             Explore More!
             <FontAwesomeIcon
