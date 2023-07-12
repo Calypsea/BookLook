@@ -22,6 +22,7 @@ export default function HomeBody() {
             <FontAwesomeIcon
               icon={faArrowRight}
               className="primaryButtonArrow"
+              
             />
           </Link>
         </div>
