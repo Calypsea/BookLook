@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { HashRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import './App.css';
 import {ThemeProvider} from './Components/context/ViewMode'
@@ -18,7 +18,7 @@ function App() {
   //https://stackoverflow.com/questions/71984401/react-router-not-working-with-github-pages
   return (
     <ThemeProvider>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/BookLook" element={<Layout />}>
             <Route index element={<HomeBody />} />
@@ -27,7 +27,7 @@ function App() {
       
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
