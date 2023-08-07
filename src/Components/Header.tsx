@@ -15,15 +15,15 @@ export default function Header() {
 
   return (
     <header className={`header${mode}`}>
-      <Link to="/BookLook" className={`logo head${mode}`}>
+      <Link to="/" className={`logo head${mode}`}>
         <p>BOOK</p>
         <p>LOOK</p>
       </Link>
       <nav>
         <Link
-          to="/BookLook"
+          to="/"
           className={
-            currentLocation === "/BookLook"
+            currentLocation === "/"
               ? `link active${mode} link${mode}`
               : `link link${mode}`
           }
@@ -31,9 +31,9 @@ export default function Header() {
           Home
         </Link>
         <Link
-          to="/BookLook/about"
+          to="/about"
           className={
-            currentLocation === "/BookLook/about"
+            currentLocation === "/about"
               ? `link active${mode} link${mode}`
               : `link link${mode}`
           }
@@ -41,9 +41,9 @@ export default function Header() {
           About
         </Link>
         <Link
-          to="/BookLook/browse"
+          to="/browse"
           className={
-            currentLocation === "/BookLook/browse"
+            currentLocation === "/browse"
               ? `link active${mode} link${mode}`
               : `link link${mode}`
           }
@@ -51,9 +51,9 @@ export default function Header() {
           Browse
         </Link>
         <Link
-          to="/BookLook"
+          to="/"
           className={
-            currentLocation === "/BookLook/favourites"
+            currentLocation === "/favourites"
               ? `link active${mode} link${mode}`
               : `link link${mode}`
           }
