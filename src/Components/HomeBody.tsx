@@ -17,11 +17,13 @@ export default function HomeBody() {
             Look up a book, read it's summary and the summary of what other
             people have to say, all in one place!
           </p>
-          <Link to="/BookLook/browse" className={`primaryButton buttonLink button${mode} `} >
+          
+          <Link to="/browse" className={`primaryButton buttonLink button${mode} `} >
             Explore More!
             <FontAwesomeIcon
               icon={faArrowRight}
               className="primaryButtonArrow"
+
             />
           </Link>
         </div>

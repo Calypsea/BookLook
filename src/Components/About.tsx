@@ -35,14 +35,14 @@ export default function About() {
             </li>
           </ul>
           <div className="buttonContainer">
-            <Link to="/BookLook/browse" className={`primaryButton button${mode}`}>
+            <Link to="/browse" className={`primaryButton button${mode}`}>
               Browse
               <FontAwesomeIcon
                 icon={faArrowUp}
                 className="primaryButtonArrow arrowUp"
               />
             </Link>
-            <Link to="/BookLook/" className={`primaryButton button${mode}`}>
+            <Link to="/" className={`primaryButton button${mode}`}>
               Sign Up
               <FontAwesomeIcon
                 icon={faArrowRight}
