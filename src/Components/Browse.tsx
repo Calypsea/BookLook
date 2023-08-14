@@ -14,17 +14,18 @@ import { ThemeContext } from "./context/ViewMode";
 import LoadingSpinner from "./Spinner";
 
 export default function Browse() {
-  
   const { mode } = useContext(ThemeContext);
 
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
   const [formData, setFormData] = useState<Form>({
     bookTitle: "",
     bookAuthor: "",
     keyword: "",
+    fetchAmount: "20",
     language: "",
     genres: [],
   });
@@ -33,6 +34,7 @@ export default function Browse() {
     bookTitle: string;
     bookAuthor: string;
     keyword: string;
+    fetchAmount: string;
     language: string;
     genres: {}[];
   }
@@ -89,13 +91,16 @@ export default function Browse() {
           favourite: false,
         };
       });
-      let displayBooks = booksArray.map((book) => {
-        return <Book key={book.id} book={book} />;
-      });
+      let displayBooks = booksArray
+        .map((book) => {
+          return <Book key={book.id} book={book} />;
+        })
+        .slice(0, parseInt(formData.fetchAmount));
+
       setDisplayBooks(displayBooks);
     }
-  }, [bookData]);
-  
+  }, [bookData, formData.fetchAmount]);
+
   const API_KEY: string | undefined = process.env.REACT_APP_RAPID_API_KEY;
   const BASE_URL: string = "https://www.googleapis.com/books/";
 
@@ -103,6 +108,20 @@ export default function Browse() {
     setIsAdvancedSearch((prev) => !prev);
   }
 
+  const [pageNumber, setPageNumber] = useState(0);
+
+  function handlePageChange() {
+    setPageNumber((prev) => prev + parseInt(formData.fetchAmount));
+  }
+  function handlePreviousPage() {
+    setPageNumber((prev) => prev - parseInt(formData.fetchAmount));
+    //uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh mostly works
+  }
+  React.useEffect(() => {
+    if (bookData.length > 0) {
+      fetchBooks();
+    }
+  }, [pageNumber]);
   async function fetchBooks() {
     try {
       setIsLoading(true);
@@ -110,29 +129,28 @@ export default function Browse() {
         formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
       const authorQuery: string =
         formData.bookAuthor !== "" ? `+inauthor:${formData.bookAuthor}` : "";
-
+      
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${query}` +
           authorQuery +
           //`+subject:${formData.genres}`+
-          `&maxResults=20` +
+          `&startIndex=${pageNumber}` +
+          `&maxResults=40` +
           `&langRestrict=${formData.language}` +
           `&key=${API_KEY}`
       );
       const data = await response.json();
+
+      setTotalItems(data.totalItems);
       setBookData(data.items);
       setIsLoading(false);
+      setIsAdvancedSearch(false);
+      window.scrollTo(0, 550);
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }
-  // `${BASE_URL}v1/volumes?q=${formData.keyword}
-  //       +intitle:${formData.bookTitle}
-  //       +inauthor:${formData.bookAuthor}
-  //       &maxResults=20
-  //       &langRestrict=${formData.language}
-  //       &key=${API_KEY}`
 
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -144,12 +162,25 @@ export default function Browse() {
       };
     });
   }
+  const formWarning: JSX.Element = (
+    <p className="warningText">*Please fill out the form for results!</p>
+  );
+  const [formWarningCheck, setFormWarningCheck] = useState(false);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     handleGenreInput();
 
-    fetchBooks();
+    if (
+      formData.bookTitle === "" &&
+      formData.keyword === "" &&
+      formData.bookAuthor === ""
+    ) {
+      setFormWarningCheck(true);
+    } else {
+      setFormWarningCheck(false);
+      fetchBooks();
+    }
   }
 
   function handleGenreInput() {
@@ -263,6 +294,8 @@ export default function Browse() {
     useState<boolean>(true);
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  ///
+
   function handleSelectedGenres(selectedGenres: string[]) {
     setSelectedGenres(selectedGenres);
   }
@@ -279,6 +312,8 @@ export default function Browse() {
       const data = await response.json();
       setBookData(data.items);
       setIsLoading(false);
+      setIsAdvancedSearch(false);
+      window.scrollTo(0, 750);
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
@@ -328,7 +363,9 @@ export default function Browse() {
                     value={formData.bookTitle}
                     onChange={handleChange}
                   />
+                  {formWarningCheck && !isAdvancedSearch ? formWarning : ""}
                 </div>
+
                 <button disabled={isAdvancedSearch ? true : false}>
                   <FontAwesomeIcon
                     icon={faMagnifyingGlass}
@@ -427,6 +464,7 @@ export default function Browse() {
                   />
                 </div>
                 {badInput && warningText}
+                {formWarningCheck && isAdvancedSearch ? formWarning : ""}
                 <button className={`primaryButton formButton button${mode}`}>
                   Search
                 </button>
@@ -449,8 +487,45 @@ export default function Browse() {
               {/* {filterElements} */}
             </section>
           )}
-          <p>Results per page: 20</p>
+          {bookData.length > 0 && (
+            <div className="totalResults">
+              <div className="results">
+                <p>Results per page: </p>
+                <select
+                  className="fetchAmount"
+                  name="fetchAmount"
+                  value={formData.fetchAmount}
+                  onChange={handleChange}
+                >
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                </select>
+              </div>
+              <p>Total results: {totalItems}</p>
+            </div>
+          )}
           {isLoading ? <LoadingSpinner /> : displayBooks}
+          {bookData.length > 0 && (
+            <div className="pageTurnButton">
+              {pageNumber !== 0 ? (
+                <button
+                  className={`primaryButton previousPageButton page${mode}`}
+                  onClick={handlePreviousPage}
+                >
+                  Previous Page
+                </button>
+              ) : (
+                ""
+              )}
+              <button
+                className={`primaryButton nextPageButton page${mode}`}
+                onClick={handlePageChange}
+              >
+                Next Page
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </main>

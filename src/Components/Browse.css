@@ -169,6 +169,7 @@ label
 {
     color: red;
     font-size: 0.85rem;
+    padding-top: 8px;
 }
 .genreButton
 {
@@ -202,4 +203,47 @@ label
 .dark 
 {
     background-color: #2E252D;
+}
+.results
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+.totalResults
+{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+.fetchAmount
+{
+   
+    position: absolute;
+    left: 125px;
+    top: 3px;
+    border-radius: 5px;
+}
+.pageTurnButton
+{
+   display: flex;
+   justify-content: flex-end;
+   
+}
+.previousPageButton, .nextPageButton
+{
+    font-size: 1rem;
+}
+.previousPageButton:hover, .nextPageButton:hover
+{
+    text-decoration: underline;
+}
+.pagelight
+{
+    color: #716666;
+}
+.pagelight:hover
+{
+    color: #716666;
 }

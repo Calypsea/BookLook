@@ -8,6 +8,7 @@ import { Link } from "react-router-dom"
 export default function HomeBody() {
   const {mode} = useContext(ThemeContext)
 
+ 
   return (
     <main id={mode}>
       <section>
