@@ -1,0 +1,22 @@
+.bookDetails
+{
+    display: flex;
+    width: 80%;
+    max-width: 1100px;
+    margin: 50px auto;
+    gap: 50px;
+}
+.bookDetailImg
+{
+    width: 196px;
+    height: 295px;
+    border-radius: 4px;
+    align-self: center;
+}
+.bookLeftColumn
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+}

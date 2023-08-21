@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect} from "react";
+import {useNavigate, useLocation } from 'react-router-dom'
 import "./Browse.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -53,6 +54,7 @@ export default function Browse() {
     totalRatings: number;
     imageLinks: {};
     language: string;
+    infoLink: string;
     favourite: boolean;
   }
 
@@ -71,6 +73,7 @@ export default function Browse() {
           averageRating,
           ratingsCount,
           language,
+          infoLink,
           imageLinks,
         } = obj["volumeInfo"] || {};
 
@@ -88,6 +91,7 @@ export default function Browse() {
           totalRatings: ratingsCount,
           imageLinks: imageLinks,
           language: language,
+          infoLink: infoLink,
           favourite: false,
         };
       });
@@ -122,6 +126,10 @@ export default function Browse() {
       fetchBooks();
     }
   }, [pageNumber]);
+
+  const navigate = useNavigate();
+  const [URLquery, setURLQuery] = useState('');
+
   async function fetchBooks() {
     try {
       setIsLoading(true);
@@ -129,18 +137,26 @@ export default function Browse() {
         formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
       const authorQuery: string =
         formData.bookAuthor !== "" ? `+inauthor:${formData.bookAuthor}` : "";
-      
+      const languageQuery:string =
+        formData.language !== "" ? `&langRestrict=${formData.language}`: "";
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${query}` +
           authorQuery +
           //`+subject:${formData.genres}`+
           `&startIndex=${pageNumber}` +
           `&maxResults=40` +
-          `&langRestrict=${formData.language}` +
+          languageQuery +
           `&key=${API_KEY}`
       );
       const data = await response.json();
+      let searchQuery = `?q=` +
+        query +
+        authorQuery +
+        `&startIndex=${pageNumber}` +
+        languageQuery;
 
+      setURLQuery(searchQuery)
+      console.log(URLquery)
       setTotalItems(data.totalItems);
       setBookData(data.items);
       setIsLoading(false);
@@ -151,6 +167,9 @@ export default function Browse() {
       throw error;
     }
   }
+  React.useEffect(()=>{
+    navigate(`/browse${URLquery}`)
+  },[URLquery])
 
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -180,7 +199,9 @@ export default function Browse() {
     } else {
       setFormWarningCheck(false);
       fetchBooks();
+      
     }
+    
   }
 
   function handleGenreInput() {
