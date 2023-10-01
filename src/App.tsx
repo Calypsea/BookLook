@@ -10,6 +10,9 @@ import About from './Components/About';
 import Layout from './Components/Layout';
 import Browse from './Components/Browse';
 import BookDetail from './Components/BookDetail';
+import Favourites from './Components/Favourites';
+import Register from './Components/AuthPages/Register';
+import Login from './Components/AuthPages/Login';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -26,6 +29,9 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="browse" element={<Browse />} />
             <Route path="browse/:id/*" element={<BookDetail />}/>
+            <Route path="favourites" element={<Favourites />}/>
+            <Route path="register" element={<Register />}/>
+            <Route path="login" element={<Login />}/>
             
       
           </Route>

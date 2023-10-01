@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "./context/ViewMode";
 
+
 export default function Book(props: any) {
   const { mode } = useContext(ThemeContext);
   const {
@@ -41,7 +42,7 @@ export default function Book(props: any) {
       return "";
     }
   }
-
+ 
   let shortenedDescription = truncateDescription(description, 200);
   return (
     <div key={id} className={`bookElement background${mode}`}>
@@ -50,7 +51,7 @@ export default function Book(props: any) {
       </div>
       <div className="bookText">
 
-      <Link to={id} state={{book: props.book}}  className="bookTitle">{title}</Link>
+      <Link to={id} state={{book: props.book, url: props.url}}  className="bookTitle">{title}</Link>
 
         <p>{subtitle}</p>
         <p className="author">{authors}</p>

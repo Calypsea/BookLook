@@ -3,12 +3,13 @@
     display: flex;
     width: 80%;
     max-width: 1100px;
-    margin: 50px auto;
+    margin: 0px auto;
+    padding-top: 50px;
     gap: 50px;
 }
 .bookDetailImg
 {
-    width: 196px;
+    width: 200px;
     height: 295px;
     border-radius: 4px;
     align-self: center;
@@ -19,4 +20,25 @@
     flex-direction: column;
     gap: 20px;
     
+}
+.bold 
+{
+    font-weight: bold;
+}
+.showButton 
+{
+    all:unset;
+    padding-left: 4px;
+    opacity: 0.7;
+    
+}
+.showButton:hover 
+{
+    text-decoration: underline;
+}
+.error
+{
+    width: 100vw;
+    height: 93vh;
+    padding: 50px;
 }

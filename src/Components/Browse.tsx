@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect} from "react";
-import {useNavigate, useLocation } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate, useLocation, useSearchParams, useResolvedPath } from "react-router-dom";
 import "./Browse.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,10 +14,25 @@ import Book from "./Book";
 import { ThemeContext } from "./context/ViewMode";
 import LoadingSpinner from "./Spinner";
 
+
+
+//BUGS
+// if user types in only an author, doesnt fetch because i had
+// to change the + in +inauthor:... to & so searchParams scans the query
+// properly. Fix this somehow babygirl.
+
+
+
+// 1. I need to use seartchParams to get all queries that are currently
+//in the url. ++
+// 2. I have all the queries in a url. Now i need to feed this query object
+// to the fetchData function. Fetch function has to check if this 
+// object is empty or not. If not, fetch using the quey.
 export default function Browse() {
   const { mode } = useContext(ThemeContext);
 
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
@@ -97,7 +112,7 @@ export default function Browse() {
       });
       let displayBooks = booksArray
         .map((book) => {
-          return <Book key={book.id} book={book} />;
+          return <Book key={book.id} book={book} url={URLquery} />;
         })
         .slice(0, parseInt(formData.fetchAmount));
 
@@ -116,60 +131,90 @@ export default function Browse() {
 
   function handlePageChange() {
     setPageNumber((prev) => prev + parseInt(formData.fetchAmount));
+    window.scrollTo(0, 550);
   }
   function handlePreviousPage() {
     setPageNumber((prev) => prev - parseInt(formData.fetchAmount));
-    //uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh mostly works
+    window.scrollTo(0, 550);
   }
   React.useEffect(() => {
     if (bookData.length > 0) {
       fetchBooks();
     }
   }, [pageNumber]);
+  
+  const params:Record<string,string> = {}; 
+  //grabs queries from url and stores
+  //in params
+  searchParams.forEach((value:string, key:string) => {
+    params[key] = value;
+  });
 
+  //console.log(params);
+
+  // React.useEffect(()=>{ //tracks url
+  console.log(formData.genres)
+
+  // }, [params])
+  //console.log(formData)
   const navigate = useNavigate();
-  const [URLquery, setURLQuery] = useState('');
-
+  const [URLquery, setURLQuery] = useState("");
+  //console.log(URLquery)
   async function fetchBooks() {
     try {
-      setIsLoading(true);
-      const query: string =
-        formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
-      const authorQuery: string =
-        formData.bookAuthor !== "" ? `+inauthor:${formData.bookAuthor}` : "";
-      const languageQuery:string =
-        formData.language !== "" ? `&langRestrict=${formData.language}`: "";
-      const response = await fetch(
-        `${BASE_URL}v1/volumes?q=${query}` +
-          authorQuery +
-          //`+subject:${formData.genres}`+
-          `&startIndex=${pageNumber}` +
-          `&maxResults=40` +
-          languageQuery +
-          `&key=${API_KEY}`
-      );
-      const data = await response.json();
-      let searchQuery = `?q=` +
-        query +
-        authorQuery +
-        `&startIndex=${pageNumber}` +
-        languageQuery;
+      
+      
+      // if(Object.keys(params).length !== 0)
+      // {
+        
 
-      setURLQuery(searchQuery)
-      console.log(URLquery)
-      setTotalItems(data.totalItems);
-      setBookData(data.items);
-      setIsLoading(false);
-      setIsAdvancedSearch(false);
-      window.scrollTo(0, 550);
+      // }
+      // else 
+      // {
+        
+        setIsLoading(true);
+          const query: string =
+          formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
+        const authorQuery: string =
+          formData.bookAuthor !== "" ? `&inauthor=${formData.bookAuthor}` : "";
+        const languageQuery: string =
+          formData.language !== "" ? `&langRestrict=${formData.language}` : "";
+        const response = await fetch(
+          `${BASE_URL}v1/volumes?q=${query}` +
+            authorQuery +
+            //`+subject:${formData.genres}`+
+            `&startIndex=${pageNumber}` +
+            `&maxResults=40` +
+            languageQuery +
+            `&key=${API_KEY}`
+        );
+        const data = await response.json();
+
+        let searchQuery =
+          `?q=` +
+          query +
+          authorQuery +
+          `&startIndex=${pageNumber}` +
+          languageQuery;
+          
+
+        setURLQuery(searchQuery);
+        setTotalItems(data.totalItems);
+        setBookData(data.items);
+        setIsLoading(false);
+        setIsAdvancedSearch(false);
+        window.scrollTo(0, 550);
+      // }
+      
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }
-  React.useEffect(()=>{
-    navigate(`/browse${URLquery}`)
-  },[URLquery])
+
+  React.useEffect(() => {
+    navigate(`/browse${URLquery}`);
+  }, [URLquery]);
 
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -194,15 +239,18 @@ export default function Browse() {
       formData.bookTitle === "" &&
       formData.keyword === "" &&
       formData.bookAuthor === ""
-    ) {
+     /* || formData.bookTitle === "" &&
+    formData.keyword === ""*/) {
       setFormWarningCheck(true);
     } else {
       setFormWarningCheck(false);
       fetchBooks();
-      
     }
-    
   }
+
+
+  
+  
 
   function handleGenreInput() {
     const filteredGenresByNull = formData.genres.filter(

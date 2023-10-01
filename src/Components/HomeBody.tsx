@@ -15,8 +15,7 @@ export default function HomeBody() {
         <div className="homePageHeader">
           <h1>Can't decide whether you should read a book?</h1>
           <p>
-            Look up a book, read it's summary and the summary of what other
-            people have to say, all in one place!
+            Look up a genre or a book, read it's summary, all in one place!
           </p>
           
           <Link to="/browse" className={`primaryButton buttonLink button${mode} `} >

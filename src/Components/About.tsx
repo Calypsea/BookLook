@@ -26,7 +26,7 @@ export default function About() {
             </li>
             <li>
               To get started, simply click the 'Browse' button, choose preferred
-              genres or specific books that you have liked, and allow us to do
+              genres or specific books that you have liked or would like to look up and allow us to do
               the rest!
             </li>
             <li>
@@ -42,7 +42,7 @@ export default function About() {
                 className="primaryButtonArrow arrowUp"
               />
             </Link>
-            <Link to="/" className={`primaryButton button${mode}`}>
+            <Link to="/register" className={`primaryButton button${mode}`}>
               Sign Up
               <FontAwesomeIcon
                 icon={faArrowRight}

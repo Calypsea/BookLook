@@ -51,7 +51,7 @@ export default function Header() {
           Browse
         </Link>
         <Link
-          to="/"
+          to="/favourites"
           className={
             currentLocation === "/favourites"
               ? `link active${mode} link${mode}`
@@ -82,14 +82,14 @@ export default function Header() {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1" className="DropdownMenu">
-              Action
+            <Dropdown.Item  href="/#/login"className="DropdownMenu">
+              Account
             </Dropdown.Item>
-            <Dropdown.Item href="#/action-2" className="DropdownMenu">
-              Another action
+            <Dropdown.Item  href="/#/register"className="DropdownMenu">
+              Register
             </Dropdown.Item>
             <Dropdown.Item href="#/action-3" className="DropdownMenu">
-              Something else
+              Log Out
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -97,54 +97,3 @@ export default function Header() {
     </header>
   );
 }
-
-// import "./Header.css";
-// import profileLogo from "./Icons/user-circle-dark.png";
-// import Dropdown from "react-bootstrap/Dropdown";
-
-// export default function Header() {
-//   return (
-//     <header>
-//       <a className="logo" href="https://www.google.com/">
-//         <p>BOOK</p>
-//         <p>LOOK</p>
-//       </a>
-//       <nav>
-//         <a href="/" className="link">
-//           Home
-//         </a>
-//         <a href="/" className="link">
-//           About
-//         </a>
-//         <a href="/" className="link">
-//           Browse
-//         </a>
-//         <a href="/" className="link">
-//           Favourites
-//         </a>
-//       </nav>
-//       <div className="rightSideNavigation">
-//         <div className="displayMode">
-//           <button>Light Dark</button>
-//         </div>
-//         <Dropdown id="dropDown">
-//           <Dropdown.Toggle className="DropdownButton" variant="none">
-//             <img className="profileLogo" src={profileLogo} alt="Profile"></img>
-//           </Dropdown.Toggle>
-
-//           <Dropdown.Menu>
-//             <Dropdown.Item href="#/action-1" className="DropdownMenu">
-//               Action
-//             </Dropdown.Item>
-//             <Dropdown.Item href="#/action-2" className="DropdownMenu">
-//               Another action
-//             </Dropdown.Item>
-//             <Dropdown.Item href="#/action-3" className="DropdownMenu">
-//               Something else
-//             </Dropdown.Item>
-//           </Dropdown.Menu>
-//         </Dropdown>
-//       </div>
-//     </header>
-//   );
-// }

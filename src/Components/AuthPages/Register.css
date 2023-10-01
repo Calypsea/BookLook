@@ -1,0 +1,30 @@
+.formSection
+{
+    max-width: 500px;
+    margin: 60px auto;
+    border-radius: 20px;
+    padding: 60px;
+
+}
+.loginButtons
+{
+    display: flex;
+    justify-content: space-between;
+}
+.logInButton:hover
+{
+    background-color: #6D626C;
+}
+#confPassword
+{
+    margin-bottom: 40px;
+}
+.question
+{
+    align-self: flex-end;
+    margin-bottom: 5px;
+}
+.secondaryInput
+{
+    width: 100%;
+}
