@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "./context/ViewMode";
+import { ThemeContext } from "../context/ViewMode";
 import { useParams, useLocation, Link } from "react-router-dom";
 
 import "./BookDetail.css";

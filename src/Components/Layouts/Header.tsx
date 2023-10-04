@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
-import profileLogo from "./Icons/user-circle-dark.png";
-import { ThemeContext } from "./context/ViewMode";
+import profileLogo from "../Icons/user-circle-dark.png";
+import { ThemeContext } from "../context/ViewMode";
 import Dropdown from "react-bootstrap/Dropdown";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

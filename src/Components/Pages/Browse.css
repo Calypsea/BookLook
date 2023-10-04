@@ -18,7 +18,7 @@
     padding: 40px;
     border-radius: 0 0 20px 20px;
 }
-.authorKeywordContainer, .formLangContainer, .advancedSearch, .titleInput, .genresWrap
+.authorKeywordContainer, .formLangContainer, .advancedSearch, .titleInput
 {
     display: flex;
     flex-direction: column;
@@ -29,15 +29,6 @@
     display: flex;
     flex-direction: row;
     gap: 40px;
-}
-.genresContainer .genreInput
-{
-    width: 90px;
-}
-.genreInput
-{
-    margin-right: 10px;
-    margin-bottom: 10px;
 }
 .deleteButton
 {

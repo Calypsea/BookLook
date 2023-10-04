@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import "./HomeBody.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import {ThemeContext} from './context/ViewMode'
+import {ThemeContext} from '../context/ViewMode'
 import { Link } from "react-router-dom"
 
 export default function HomeBody() {

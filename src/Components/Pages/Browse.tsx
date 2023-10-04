@@ -1,5 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate, useLocation, useSearchParams, useResolvedPath } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+  useSearchParams,
+  useResolvedPath,
+} from "react-router-dom";
 import "./Browse.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,27 +14,27 @@ import {
   faMagnifyingGlass,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import Genre from "./Genre";
-import Book from "./Book";
-import { ThemeContext } from "./context/ViewMode";
-import LoadingSpinner from "./Spinner";
-
-
+import Genre from "../sm_components/Genre";
+import Book from "../sm_components/Book";
+import { ThemeContext } from "../context/ViewMode";
+import LoadingSpinner from "../sm_components/Spinner";
 
 //BUGS
 // if user types in only an author, doesnt fetch because i had
 // to change the + in +inauthor:... to & so searchParams scans the query
 // properly. Fix this somehow babygirl.
 
-
-
 // 1. I need to use seartchParams to get all queries that are currently
 //in the url. ++
 // 2. I have all the queries in a url. Now i need to feed this query object
-// to the fetchData function. Fetch function has to check if this 
+// to the fetchData function. Fetch function has to check if this
 // object is empty or not. If not, fetch using the quey.
 export default function Browse() {
   const { mode } = useContext(ThemeContext);
+
+  // const getFavouritesFromLocal = localStorage.getItem('favourites');
+  // const favouriteArrayFromLocal = JSON.parse(getFavouritesFromLocal);
+
 
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,13 +42,13 @@ export default function Browse() {
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
+  const [favouritesArray, setFavouritesArray] = useState<Book[]>([]);
   const [formData, setFormData] = useState<Form>({
     bookTitle: "",
     bookAuthor: "",
     keyword: "",
     fetchAmount: "20",
     language: "",
-    genres: [],
   });
   //https://developers.google.com/books/docs/v1/using
   interface Form {
@@ -52,7 +57,6 @@ export default function Browse() {
     keyword: string;
     fetchAmount: string;
     language: string;
-    genres: {}[];
   }
 
   interface Book {
@@ -112,7 +116,14 @@ export default function Browse() {
       });
       let displayBooks = booksArray
         .map((book) => {
-          return <Book key={book.id} book={book} url={URLquery} />;
+          return (
+            <Book
+              key={book.id}
+              book={book}
+              url={URLquery}
+              handleClick={handleFavouriteArrays}
+            />
+          );
         })
         .slice(0, parseInt(formData.fetchAmount));
 
@@ -142,70 +153,63 @@ export default function Browse() {
       fetchBooks();
     }
   }, [pageNumber]);
-  
-  const params:Record<string,string> = {}; 
+
+  const params: Record<string, string> = {};
   //grabs queries from url and stores
   //in params
-  searchParams.forEach((value:string, key:string) => {
+  searchParams.forEach((value: string, key: string) => {
     params[key] = value;
   });
 
-  //console.log(params);
+  
 
   // React.useEffect(()=>{ //tracks url
-  console.log(formData.genres)
 
   // }, [params])
-  //console.log(formData)
+ 
   const navigate = useNavigate();
   const [URLquery, setURLQuery] = useState("");
-  //console.log(URLquery)
+ 
   async function fetchBooks() {
     try {
-      
-      
       // if(Object.keys(params).length !== 0)
       // {
-        
 
       // }
-      // else 
+      // else
       // {
-        
-        setIsLoading(true);
-          const query: string =
-          formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
-        const authorQuery: string =
-          formData.bookAuthor !== "" ? `&inauthor=${formData.bookAuthor}` : "";
-        const languageQuery: string =
-          formData.language !== "" ? `&langRestrict=${formData.language}` : "";
-        const response = await fetch(
-          `${BASE_URL}v1/volumes?q=${query}` +
-            authorQuery +
-            //`+subject:${formData.genres}`+
-            `&startIndex=${pageNumber}` +
-            `&maxResults=40` +
-            languageQuery +
-            `&key=${API_KEY}`
-        );
-        const data = await response.json();
 
-        let searchQuery =
-          `?q=` +
-          query +
+      setIsLoading(true);
+      const query: string =
+        formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
+      const authorQuery: string =
+        formData.bookAuthor !== "" ? `&inauthor=${formData.bookAuthor}` : "";
+      const languageQuery: string =
+        formData.language !== "" ? `&langRestrict=${formData.language}` : "";
+      const response = await fetch(
+        `${BASE_URL}v1/volumes?q=${query}` +
           authorQuery +
           `&startIndex=${pageNumber}` +
-          languageQuery;
-          
+          `&maxResults=40` +
+          languageQuery +
+          `&key=${API_KEY}`
+      );
+      const data = await response.json();
 
-        setURLQuery(searchQuery);
-        setTotalItems(data.totalItems);
-        setBookData(data.items);
-        setIsLoading(false);
-        setIsAdvancedSearch(false);
-        window.scrollTo(0, 550);
+      let searchQuery =
+        `?q=` +
+        query +
+        authorQuery +
+        `&startIndex=${pageNumber}` +
+        languageQuery;
+
+      setURLQuery(searchQuery);
+      setTotalItems(data.totalItems);
+      setBookData(data.items);
+      setIsLoading(false);
+      setIsAdvancedSearch(false);
+      window.scrollTo(0, 550);
       // }
-      
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
@@ -233,137 +237,28 @@ export default function Browse() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    handleGenreInput();
 
     if (
       formData.bookTitle === "" &&
       formData.keyword === "" &&
       formData.bookAuthor === ""
-     /* || formData.bookTitle === "" &&
-    formData.keyword === ""*/) {
+      /* || formData.bookTitle === "" &&
+    formData.keyword === ""*/
+    ) 
+    {
       setFormWarningCheck(true);
-    } else {
+    } 
+    else 
+    {
       setFormWarningCheck(false);
       fetchBooks();
     }
   }
 
-
-  
-  
-
-  function handleGenreInput() {
-    const filteredGenresByNull = formData.genres.filter(
-      (genre) => genre != null && typeof genre === "object"
-    );
-
-    const filteredGenres = filteredGenresByNull.filter((genre) => {
-      const genreId = parseInt(Object.keys(genre)[0]);
-
-      return inputComponentArray.some((item) => item.id === genreId);
-    });
-
-    setFormData((prev) => {
-      return {
-        ...prev,
-        genres: filteredGenres,
-      };
-    });
-  }
-
-  const InputComponent = ({
-    onDelete, //giving the component a delete function and an id
-    id,
-  }: {
-    onDelete: () => void;
-    id: number;
-  }) => {
-    return (
-      <div className="genreInputParent">
-        <input
-          name={`${id}`}
-          type="text"
-          placeholder="Genre"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const updatedGenres = [...formData.genres];
-
-            updatedGenres[id] = { [e.target.name]: e.target.value };
-
-            setFormData((prev) => ({
-              ...prev,
-              genres: updatedGenres,
-            }));
-          }}
-          className="primaryInput genreInput"
-        ></input>
-        <button type="button" onClick={onDelete} className="deleteButton">
-          <FontAwesomeIcon
-            className="genreIcon"
-            icon={faXmark}
-            style={id === 0 ? { display: "none" } : { color: "grey" }}
-            //renders user unable to delete all genre inputs
-            size="lg"
-          />
-        </button>
-      </div>
-    );
-  };
-
-  ///
-
-  //
-  const [inputComponentArray, setInputComponentArray] = useState<
-    { id: number; component: JSX.Element }[]
-  >([
-    {
-      id: 0,
-      //defining the array with one base input that can't be deleted
-      component: (
-        <InputComponent onDelete={() => handleDeleteGenre(0)} id={0} />
-      ),
-    },
-  ]);
-  const [inputID, setInputID] = React.useState(1);
-
-  function addGenre() {
-    const atLeastOneInputEmpty = inputComponentArray.some(
-      ({ id }) =>
-        formData.genres[id] === undefined || formData.genres[id] === ""
-    );
-
-    if (!atLeastOneInputEmpty) {
-      setBadInput((prev) => false);
-      const newInputID = inputID + 1; // Capture the current value of inputID
-      setInputID(newInputID);
-      //setInputID((prev) => prev + 1);
-      setInputComponentArray((prev) => [
-        ...prev,
-        {
-          id: newInputID,
-          component: (
-            <InputComponent
-              onDelete={() => handleDeleteGenre(newInputID)}
-              id={newInputID}
-            />
-          ),
-        },
-      ]);
-    } else {
-      setBadInput((prev) => true);
-    }
-  }
-  const [badInput, setBadInput] = useState<boolean>(false);
-  const warningText: JSX.Element = (
-    <p className="warningText">*Please fill out all current genre boxes!</p>
-  );
-  function handleDeleteGenre(id: number) {
-    setInputComponentArray((prev) => prev.filter((item) => item.id !== id));
-  }
   const [advancedSearchIsOpen, setAdvancedSearchIsOpen] =
     useState<boolean>(true);
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  ///
 
   function handleSelectedGenres(selectedGenres: string[]) {
     setSelectedGenres(selectedGenres);
@@ -388,6 +283,27 @@ export default function Browse() {
       throw error;
     }
   }
+
+  //favourites array
+
+  function handleFavouriteArrays(book:Book) 
+  {
+    setFavouritesArray((prev) => {
+      if (prev.some((favoriteBook) => favoriteBook.id === book.id)) {
+        return prev.filter((favoriteBook) => favoriteBook.id !== book.id); 
+      }
+      return [...prev, book];
+    });
+    //this now creates an array of objects of all the books that have been clicked
+    // create the button change and forbid repeated instances of books + 
+    // take the array and display it in favourites page
+    // make favourite page pretty.
+
+  }
+  
+  console.log(favouritesArray)
+ 
+ 
   return (
     <main id={mode}>
       <div className="browseBody">
@@ -515,24 +431,7 @@ export default function Browse() {
                     </select>
                   </div>
                 </div>
-                <div className="genresContainer">
-                  <div className="genresWrap">
-                    <label className="aaa">Genres</label>
-                    <div className="renderedInputs">
-                      {inputComponentArray.map(({ id, component }) => (
-                        <div key={id}>{component}</div>
-                      ))}
-                    </div>
-                  </div>
-                  <FontAwesomeIcon
-                    type="button"
-                    onClick={addGenre}
-                    className="plusIcon"
-                    icon={faPlus}
-                    style={{ color: "#ffffff" }}
-                  />
-                </div>
-                {badInput && warningText}
+
                 {formWarningCheck && isAdvancedSearch ? formWarning : ""}
                 <button className={`primaryButton formButton button${mode}`}>
                   Search

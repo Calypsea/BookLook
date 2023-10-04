@@ -5,7 +5,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom"
-import { ThemeContext } from "./context/ViewMode";
+import { ThemeContext } from "../context/ViewMode";
 
 export default function About() {
 

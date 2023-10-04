@@ -4,13 +4,13 @@ import { HashRouter, Routes, Route } from "react-router-dom"
 import './App.css';
 import {ThemeProvider} from './Components/context/ViewMode'
 
-import Header from './Components/Header'
-import HomeBody from './Components/HomeBody';
-import About from './Components/About';
-import Layout from './Components/Layout';
-import Browse from './Components/Browse';
-import BookDetail from './Components/BookDetail';
-import Favourites from './Components/Favourites';
+import Header from './Components/Layouts/Header'
+import HomeBody from './Components/Pages/HomeBody';
+import About from './Components/Pages/About';
+import Layout from './Components/Layouts/Layout';
+import Browse from './Components/Pages/Browse';
+import BookDetail from './Components/Pages/BookDetail';
+import Favourites from './Components/Pages/Favourites';
 import Register from './Components/AuthPages/Register';
 import Login from './Components/AuthPages/Login';
 
@@ -19,7 +19,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
  
-  
   return (
     <ThemeProvider>
       <HashRouter>
@@ -32,8 +31,6 @@ function App() {
             <Route path="favourites" element={<Favourites />}/>
             <Route path="register" element={<Register />}/>
             <Route path="login" element={<Login />}/>
-            
-      
           </Route>
           <Route path="*" element={<h1> 404 Page not found</h1>}/>
         </Routes>

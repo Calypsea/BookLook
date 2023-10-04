@@ -1,11 +1,11 @@
 import "./Book.css";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { ThemeContext } from "./context/ViewMode";
-
+import { ThemeContext } from "../context/ViewMode";
 
 export default function Book(props: any) {
   const { mode } = useContext(ThemeContext);
+  const [favourited, setFavourited] = useState(false);
   const {
     title,
     subtitle,
@@ -42,7 +42,11 @@ export default function Book(props: any) {
       return "";
     }
   }
- 
+  function handleFavouriteActions()
+  {
+    setFavourited(prev => !prev);
+    props.handleClick(props.book);
+  }
   let shortenedDescription = truncateDescription(description, 200);
   return (
     <div key={id} className={`bookElement background${mode}`}>
@@ -50,15 +54,23 @@ export default function Book(props: any) {
         <img src={imageSource} alt="" className="bookImg" />
       </div>
       <div className="bookText">
-
-      <Link to={id} state={{book: props.book, url: props.url}}  className="bookTitle">{title}</Link>
+        <Link
+          to={id}
+          state={{ book: props.book, url: props.url }}
+          className="bookTitle"
+        >
+          {title}
+        </Link>
 
         <p>{subtitle}</p>
         <p className="author">{authors}</p>
         <p>{shortenedDescription}</p>
         <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
-        <button className={`primaryButton button${mode} smallButton`}>
-          Want to read
+        <button
+          onClick={handleFavouriteActions}
+          className={`primaryButton button${mode} smallButton`}
+        >
+          {favourited ? `Unfavourite` : `Want to read`}
         </button>
       </div>
     </div>
