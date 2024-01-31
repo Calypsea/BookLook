@@ -15,10 +15,6 @@
 {
     background-color: #6D626C;
 }
-#confPassword
-{
-    margin-bottom: 40px;
-}
 .question
 {
     align-self: flex-end;
@@ -27,4 +23,9 @@
 .secondaryInput
 {
     width: 100%;
+}
+.errorMessage
+{
+    color: red;
+    margin-top: 20px;
 }

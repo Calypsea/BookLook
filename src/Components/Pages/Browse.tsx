@@ -19,6 +19,11 @@ import Book from "../sm_components/Book";
 import { ThemeContext } from "../context/ViewMode";
 import LoadingSpinner from "../sm_components/Spinner";
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {db} from '../../config/firebase';
+import { doc,getDocs, deleteDoc, addDoc, collection,getCountFromServer, query, where, documentId } from "firebase/firestore"; 
+
+
 //BUGS
 // if user types in only an author, doesnt fetch because i had
 // to change the + in +inauthor:... to & so searchParams scans the query
@@ -34,7 +39,16 @@ export default function Browse() {
 
   // const getFavouritesFromLocal = localStorage.getItem('favourites');
   // const favouriteArrayFromLocal = JSON.parse(getFavouritesFromLocal);
-
+  const [userUID, setUserUID ]  = useState<string>();
+  const auth = getAuth();
+  // console.log(auth.currentUser?.uid);
+  onAuthStateChanged(auth, (user) => 
+  {
+    if (user) 
+    {
+     
+    }
+  });
 
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,7 +56,7 @@ export default function Browse() {
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [favouritesArray, setFavouritesArray] = useState<Book[]>([]);
+  // const [favouritesArray, setFavouritesArray] = useState<Book[]>([]);
   const [formData, setFormData] = useState<Form>({
     bookTitle: "",
     bookAuthor: "",
@@ -76,10 +90,11 @@ export default function Browse() {
     infoLink: string;
     favourite: boolean;
   }
+  var booksArray: Book[];
 
   React.useEffect(() => {
     if (bookData.length > 0) {
-      let booksArray: Book[] = bookData.map((obj) => {
+      booksArray = bookData.map((obj) => {
         const {
           title,
           subtitle,
@@ -97,7 +112,7 @@ export default function Browse() {
         } = obj["volumeInfo"] || {};
 
         return {
-          id: obj["etag"],
+          id: obj["id"],
           title: title,
           subtitle: subtitle,
           authors: authors,
@@ -114,6 +129,7 @@ export default function Browse() {
           favourite: false,
         };
       });
+
       let displayBooks = booksArray
         .map((book) => {
           return (
@@ -129,6 +145,7 @@ export default function Browse() {
 
       setDisplayBooks(displayBooks);
     }
+
   }, [bookData, formData.fetchAmount]);
 
   const API_KEY: string | undefined = process.env.REACT_APP_RAPID_API_KEY;
@@ -162,23 +179,12 @@ export default function Browse() {
   });
 
   
-
-  // React.useEffect(()=>{ //tracks url
-
-  // }, [params])
- 
   const navigate = useNavigate();
   const [URLquery, setURLQuery] = useState("");
  
   async function fetchBooks() {
     try {
-      // if(Object.keys(params).length !== 0)
-      // {
-
-      // }
-      // else
-      // {
-
+     
       setIsLoading(true);
       const query: string =
         formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
@@ -209,13 +215,14 @@ export default function Browse() {
       setIsLoading(false);
       setIsAdvancedSearch(false);
       window.scrollTo(0, 550);
+      
       // }
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }
-
+  // console.log(bookData);
   React.useEffect(() => {
     navigate(`/browse${URLquery}`);
   }, [URLquery]);
@@ -285,23 +292,100 @@ export default function Browse() {
   }
 
   //favourites array
+  // const [bookListID, setBookListID] = useState("0");
+  // React.useEffect(() => {
+  //   const getFavouriteBooks = async() => {
+  //     try{
+        
+  //       const data = await getDocs(favouriteListCollection);
+  //       const filteredData: List[] = data.docs.map((doc) => {
+  //         const docData = doc.data() as List; 
+  //         return { ...docData, id: doc.id };
+  //       });
+  //       console.log(filteredData);
+  //       setFavouritesList(filteredData);
+  //       console.log(favouriteslist)
+  //     }
+  //     catch(err)
+  //     {
+  //       console.error(err);
+  //     }
 
-  function handleFavouriteArrays(book:Book) 
-  {
-    setFavouritesArray((prev) => {
-      if (prev.some((favoriteBook) => favoriteBook.id === book.id)) {
-        return prev.filter((favoriteBook) => favoriteBook.id !== book.id); 
-      }
-      return [...prev, book];
-    });
-    //this now creates an array of objects of all the books that have been clicked
-    // create the button change and forbid repeated instances of books + 
-    // take the array and display it in favourites page
-    // make favourite page pretty.
+  //   }
 
+  //   getFavouriteBooks();
+  // }, [])
+  const [favouriteslist, setFavouritesList] = React.useState<List[]>([{
+    bookid: "",
+    id: "",
+    uid: "",
+  }]);
+
+  interface List {
+    bookid: string;
+    id: string;
+    uid: string;
   }
+  async function bookExists(bookid: string, id :string): Promise<boolean> {
+    const snap = await getCountFromServer(query(
+      collection(db, 'favouriteLists'), where("bookid", '==', bookid), where("uid", "==", id )
+    ))
+    console.log(!!snap.data().count);
+    return !!snap.data().count;
+  }
+  async function handleFavouriteArrays(book:Book) 
+  {
+    try
+    {
+
+      if(auth.currentUser?.uid)
+      {
+        if(await bookExists(book.id, auth.currentUser.uid))
+        {
+          console.log("this book already exists");
+          const q = query(
+            collection(db, 'favouriteLists'),
+            where('bookid', '==', book.id),
+            where('uid', '==', auth.currentUser?.uid)
+          );
+          const querySnapshot = await getDocs(q);
+          let documentId;
+          querySnapshot.forEach((doc) => {
+            documentId = doc.id;
+          });
+          console.log(documentId);
+          if(documentId)
+          {
+            await deleteDoc(doc(db, "favouriteLists", documentId));
+          }
+        }
+        else 
+        {
+          await addDoc(collection(db, "favouriteLists"), {
+            bookid: book.id,
+            uid: auth.currentUser?.uid
+          });
+          
+        }
+      }
+      else 
+      {
+        console.log("user isn't logged in");
+      }
+
+      
+    }
+    catch(err)
+    {
+      console.error(err);
+    }
+    
+
+  };
+
+
   
-  console.log(favouritesArray)
+  
  
  
   return (

@@ -1,17 +1,54 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Header.css";
 import profileLogo from "../Icons/user-circle-dark.png";
 import { ThemeContext } from "../context/ViewMode";
 import Dropdown from "react-bootstrap/Dropdown";
 
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+
+import {auth} from '../../config/firebase.js';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {signOut} from 'firebase/auth';
+import { JsxAttribute } from "typescript";
 
 export default function Header() {
   const currentLocation: string = useLocation().pathname;
 
   const { mode, toggle } = useContext(ThemeContext);
+
+  const navigate = useNavigate();
+  const logout = async()=> {
+      try{ 
+        await signOut(auth);
+      }catch(err){
+        console.error(err);
+      }
+    }
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const LoggedInDropdownMenu:any = (
+    <Dropdown.Menu>
+     
+      <Dropdown.Item href="/login" onClick={logout} className="DropdownMenu">
+        Log Out
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  );
+
+
+  const LoggedOutDropdownMenu:any = (
+    <Dropdown.Menu>
+      <Dropdown.Item  href="/#/login"className="DropdownMenu">
+        Login
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  );
+
+  const user = auth.currentUser;
+  // console.log(user);
 
   return (
     <header className={`header${mode}`}>
@@ -80,18 +117,8 @@ export default function Header() {
           <Dropdown.Toggle className="DropdownButton" variant="none">
             <img className="profileLogo" src={profileLogo} alt="Profile"></img>
           </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            <Dropdown.Item  href="/#/login"className="DropdownMenu">
-              Account
-            </Dropdown.Item>
-            <Dropdown.Item  href="/#/register"className="DropdownMenu">
-              Register
-            </Dropdown.Item>
-            <Dropdown.Item href="#/action-3" className="DropdownMenu">
-              Log Out
-            </Dropdown.Item>
-          </Dropdown.Menu>
+          
+         {user ? LoggedInDropdownMenu : LoggedOutDropdownMenu}
         </Dropdown>
       </div>
     </header>

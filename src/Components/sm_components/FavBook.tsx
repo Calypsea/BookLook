@@ -2,14 +2,17 @@ import "./Book.css";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "../context/ViewMode";
-import { collection,getCountFromServer, query, where} from "firebase/firestore"; 
-import {db} from '../../config/firebase';
+import {
+  collection,
+  getCountFromServer,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../config/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function Book(props: any) {
+export default function FavBook(props: any) {
   const { mode } = useContext(ThemeContext);
-  const [isFavourite, setIsFavourite] = useState<boolean>(false);
-  const [uh, setUh] = useState(false);
   const {
     title,
     subtitle,
@@ -31,19 +34,7 @@ export default function Book(props: any) {
   if (imageLinks !== undefined) {
     imageSource = imageLinks["thumbnail"];
   }
-  const auth = getAuth();
 
-  async function bookExists(bookid: string, id :string): Promise<boolean> {
-    const snap = await getCountFromServer(query(
-      collection(db, 'favouriteLists'), where("bookid", '==', bookid), where("uid", "==", id )
-    ))
-    console.log(!!snap.data().count);
-    return !!snap.data().count;
-  }
-
-
-
-  
   function truncateDescription(
     str: string | undefined,
     length: number
@@ -58,11 +49,8 @@ export default function Book(props: any) {
       return "";
     }
   }
-  function handleFavouriteActions()
-  {
-    setIsFavourite(prev => !prev);
+  function handleFavouriteActions() {
     props.handleClick(props.book);
-    
   }
   let shortenedDescription = truncateDescription(description, 200);
   return (
@@ -72,7 +60,7 @@ export default function Book(props: any) {
       </div>
       <div className="bookText">
         <Link
-          to={id}
+          to={`../browse/${id}`}
           state={{ book: props.book, url: props.url }}
           className="bookTitle"
         >
@@ -87,7 +75,7 @@ export default function Book(props: any) {
           onClick={handleFavouriteActions}
           className={`primaryButton button${mode} smallButton`}
         >
-          {isFavourite ? `Unfavourite` : `Want to read`}
+          Unfavourite
         </button>
       </div>
     </div>
