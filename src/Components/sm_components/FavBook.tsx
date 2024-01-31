@@ -49,7 +49,7 @@ export default function FavBook(props: any) {
       return "";
     }
   }
-  function handleFavouriteActions() {
+  function handleFavouriteDelete() {
     props.handleClick(props.book);
   }
   let shortenedDescription = truncateDescription(description, 200);
@@ -72,7 +72,7 @@ export default function FavBook(props: any) {
         <p>{shortenedDescription}</p>
         <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
         <button
-          onClick={handleFavouriteActions}
+          onClick={handleFavouriteDelete}
           className={`primaryButton button${mode} smallButton`}
         >
           Unfavourite

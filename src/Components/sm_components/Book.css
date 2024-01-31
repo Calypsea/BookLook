@@ -65,3 +65,7 @@
     background-color: #2e252cc5;
     border-radius: 10px;
 }
+.warningmsg
+{
+    color: red;
+}

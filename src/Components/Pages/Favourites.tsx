@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
-
+import './Favourites.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from "../context/ViewMode";
 import {db} from '../../config/firebase';
-import { getDocs, collection} from 'firebase/firestore';
+import { doc,getDocs, deleteDoc,getCountFromServer, collection, query, where } from "firebase/firestore"; 
 import Book from "../sm_components/Book";
 import FavBook from '../sm_components/FavBook';
 import LoadingSpinner from "../sm_components/Spinner";
@@ -16,6 +16,7 @@ export default function Favourites(props: any)
      const [isLoading, setIsLoading] = useState<boolean>(false);
     const [displayBooks, setDisplayBooks] = React.useState<JSX.Element[]>([]);
     const [favouriteBooks, setFavouriteBooks] = React.useState<Book[]>([]);
+    const [bookCount, setBookCount] = React.useState(0);
     const [favouriteslist, setFavouritesList] = React.useState<List[]>([{
       bookid: "",
       id: "",
@@ -49,58 +50,70 @@ export default function Favourites(props: any)
       };
     }
     
-    const favouriteListCollection = collection(db, "favouriteLists");
+    
+
 
     const [greetingMessage, setGreetingMessage]= React.useState<string>("");
     const navigate = useNavigate();
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        
-        const uid = user.uid;
-      } else {
-        navigate('../login');
-      }
-    });
     
-   
+
+
+    console.log("user: " , auth.currentUser?.uid);
     React.useEffect(() => {
-      const getFavouriteBooks = async () => {
-        try {
-          // setIsLoading(true);
-          const data = await getDocs(favouriteListCollection);
-          const filteredData: List[] = data.docs.map((doc) => {
-            const docData = doc.data() as List; 
-            return { ...docData, id: doc.id };
-          });
-    
-          let URL:string = "https://www.googleapis.com/books/v1/volumes/";
-    
-          const booksData = await Promise.all(
-            filteredData.map(async (item) => {
-              const URL_QUERY = URL +  item.bookid;
-              const res = await fetch(URL_QUERY);
-              const data = await res.json();
-              return { id: data.id, volumeInfo: data.volumeInfo };
-            })
-          );
-    
-          // Update favouriteBooks in a single batch
-          setFavouritesList(filteredData);
-          setFavouriteBooks(booksData);
-          // setIsLoading(false);
-        } catch(err) {
-          console.error(err);
+      onAuthStateChanged(auth, (user) => {
+        if(user) 
+        {
+          
+          const uid = user.uid;
+          const getFavouriteBooks = async () => {
+            try {
+              // setIsLoading(true);
+              
+              const favouriteListCollection = collection(db, "favouriteLists");
+              const queryWithWhere = query(favouriteListCollection, where('uid', '==', uid));
+              const data = await getDocs(queryWithWhere);
+              const filteredData: List[] = data.docs.map((doc) => {
+                const docData = doc.data() as List; 
+                return { ...docData, id: doc.id };
+              });
+        
+              let URL:string = "https://www.googleapis.com/books/v1/volumes/";
+        
+              const booksData = await Promise.all(
+                filteredData.map(async (item) => {
+                  const URL_QUERY = URL +  item.bookid;
+                  const res = await fetch(URL_QUERY);
+                  const data = await res.json();
+                  return { id: data.id, volumeInfo: data.volumeInfo };
+                })
+              );
+        
+              // Update favouriteBooks in a single batch
+              setFavouritesList(filteredData);
+              setFavouriteBooks(booksData);
+              // setIsLoading(false);
+            } catch(err) {
+              console.error(err);
+            }
+          }
+          
+          getFavouriteBooks();
         }
-      }
-      getFavouriteBooks();
+        else 
+        {
+          navigate('../login');
+        }
+      });
+      
     
       
-    }, []);
-  console.log(favouriteslist)
+    }, [  bookCount]);
     React.useEffect(()=> {
-      if(favouriteBooks.length > 0)
+      
+      if(favouriteBooks.length >= 0)
       {
+
         let booksArray = favouriteBooks.map((book) => {
           const {
             title,
@@ -141,20 +154,62 @@ export default function Favourites(props: any)
             <FavBook
               key={book.id}
               book={book}
+              handleClick={deleteFavouriteBook}
             />
           );
         })
         setDisplayBooks(displayBooks);
+        
       }
+     
       
 
     }, [favouriteBooks])
+    async function countCollections()
+    {
+      try{
+        const coll = collection(db, "favouriteLists");
+        const snapshot = await getCountFromServer(coll);
+        setBookCount(snapshot.data().count);
+      }
+      catch(err)
+      {
+        console.error(err);
+      }
+    }
+    async function deleteFavouriteBook(book:Book)
+    {
+      try
+      {
+        const q = query(
+          collection(db, 'favouriteLists'),
+          where('bookid', '==', book.id),
+          where('uid', '==', auth.currentUser?.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        let documentId;
+        querySnapshot.forEach((doc) => {
+          documentId = doc.id;
+        });
+        if(documentId)
+        {
+          await deleteDoc(doc(db, "favouriteLists", documentId));
+        }
+        countCollections();
+        
 
+      }
+      catch(err)
+      {
+        console.error(err);
+      }
+    }
   
     return(
         <main id={mode}>
-           <h2>Your Favourited books: </h2>
+           <h2 className='favouriteHeader'>Your Favourited books: </h2>
             {displayBooks}
+            {greetingMessage}
 
           
         </main>

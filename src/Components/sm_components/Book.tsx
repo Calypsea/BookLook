@@ -1,6 +1,6 @@
 import "./Book.css";
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import { ThemeContext } from "../context/ViewMode";
 import { collection,getCountFromServer, query, where} from "firebase/firestore"; 
 import {db} from '../../config/firebase';
@@ -8,6 +8,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Book(props: any) {
   const { mode } = useContext(ThemeContext);
+  const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const [uh, setUh] = useState(false);
   const {
@@ -43,7 +44,7 @@ export default function Book(props: any) {
 
 
 
-  
+   const [ warningMessage, setWarningMessage] = React.useState("");
   function truncateDescription(
     str: string | undefined,
     length: number
@@ -60,8 +61,24 @@ export default function Book(props: any) {
   }
   function handleFavouriteActions()
   {
-    setIsFavourite(prev => !prev);
-    props.handleClick(props.book);
+    onAuthStateChanged(auth, (user) => {
+      if(user) 
+      {
+        
+        const uid = user.uid;
+        setIsFavourite(prev => !prev);
+        props.handleClick(props.book);
+        setWarningMessage("");
+
+        
+      }
+      else 
+      {
+        setWarningMessage("You should login first!");
+      }
+    });
+    
+    
     
   }
   let shortenedDescription = truncateDescription(description, 200);
@@ -89,6 +106,7 @@ export default function Book(props: any) {
         >
           {isFavourite ? `Unfavourite` : `Want to read`}
         </button>
+        <p className="warningmsg">{warningMessage}</p>
       </div>
     </div>
   );
