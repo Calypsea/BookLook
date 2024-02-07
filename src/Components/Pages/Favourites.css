@@ -1,4 +1,9 @@
-.favouriteHeader
+
+.favouriteBooks
 {
-    padding-top: 50px;
+    padding-top: 4vh; 
+    text-align: left;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 80%;
 }

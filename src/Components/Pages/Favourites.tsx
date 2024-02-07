@@ -207,11 +207,11 @@ export default function Favourites(props: any)
   
     return(
         <main id={mode}>
-           <h2 className='favouriteHeader'>Your Favourited books: </h2>
-            {displayBooks}
-            {greetingMessage}
-
-          
+           <section className="favouriteBooks">
+             <h2 className='favouriteHeader'>Your Favourited books: </h2>
+              {displayBooks}
+              {greetingMessage}
+           </section>
         </main>
     )
 }

@@ -1,16 +1,20 @@
 import "./Book.css";
 import React, { useContext, useState } from "react";
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../context/ViewMode";
-import { collection,getCountFromServer, query, where} from "firebase/firestore"; 
-import {db} from '../../config/firebase';
+import {
+  collection,
+  getCountFromServer,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../config/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Book(props: any) {
   const { mode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
-  const [uh, setUh] = useState(false);
   const {
     title,
     subtitle,
@@ -34,17 +38,18 @@ export default function Book(props: any) {
   }
   const auth = getAuth();
 
-  async function bookExists(bookid: string, id :string): Promise<boolean> {
-    const snap = await getCountFromServer(query(
-      collection(db, 'favouriteLists'), where("bookid", '==', bookid), where("uid", "==", id )
-    ))
-    console.log(!!snap.data().count);
+  async function bookExists(bookid: string, id: string): Promise<boolean> {
+    const snap = await getCountFromServer(
+      query(
+        collection(db, "favouriteLists"),
+        where("bookid", "==", bookid),
+        where("uid", "==", id)
+      )
+    );
     return !!snap.data().count;
   }
 
-
-
-   const [ warningMessage, setWarningMessage] = React.useState("");
+  const [warningMessage, setWarningMessage] = React.useState("");
   function truncateDescription(
     str: string | undefined,
     length: number
@@ -59,27 +64,16 @@ export default function Book(props: any) {
       return "";
     }
   }
-  function handleFavouriteActions()
-  {
+  function handleFavouriteActions() {
     onAuthStateChanged(auth, (user) => {
-      if(user) 
-      {
-        
-        const uid = user.uid;
-        setIsFavourite(prev => !prev);
+      if (user) {
+        setIsFavourite((prev) => !prev);
         props.handleClick(props.book);
         setWarningMessage("");
-
-        
-      }
-      else 
-      {
+      } else {
         setWarningMessage("You should login first!");
       }
     });
-    
-    
-    
   }
   let shortenedDescription = truncateDescription(description, 200);
   return (
@@ -90,7 +84,12 @@ export default function Book(props: any) {
       <div className="bookText">
         <Link
           to={id}
-          state={{ book: props.book, url: props.url }}
+          state={{
+            book: props.book,
+            url: props.url,
+            favourite: isFavourite,
+            // handleFavouriteArrays: props.handleClick,
+          }}
           className="bookTitle"
         >
           {title}

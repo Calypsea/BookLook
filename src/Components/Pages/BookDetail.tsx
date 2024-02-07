@@ -26,9 +26,9 @@ export default function BookDetail() {
   const [showMore, setShowMore] = React.useState(false);
 
   let { state } = useLocation();
-  console.log("useLocation = " , state)
   const book = state?.book;
   const url = state?.url;
+  // let handleFavouriteArrays = state?.handleFavouriteArrays;
   if (!book) {
     return <main id={mode} className="error"><h1>Oops! Something went wrong.</h1><p>Book information not available.</p></main>;
   }
@@ -64,18 +64,21 @@ export default function BookDetail() {
       return "";
     }
   }
-  console.log(url)
   let shortenedDescription = truncateDescription(description, 500);
 
-  function handleShowMore() {}
+  // const handleFavourites = () => {
+  //   if (handleFavouriteArrays) {
+  //     handleFavouriteArrays(book);
+  //     console.log("hi")
+  //   }
+  // }
   return (
     <div id={mode}>
       <main className={`bookDetails`} id={mode}>
         <div className="bookLeftColumn">
           <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
-          <button className={`primaryButton button${mode}`}>
-            {" "}
-            Want to read
+          <button className={`primaryButton button${mode}`} >
+            {state?.favourite ? " Favourited": "Want to read"}
           </button>
           {infoLink !== "" ? (
             <a

@@ -27,7 +27,9 @@ export default function Header() {
         console.error(err);
       }
     }
-
+    
+    // console.log(auth.currentUser?.uid);
+    
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const LoggedInDropdownMenu:any = (
     <Dropdown.Menu>

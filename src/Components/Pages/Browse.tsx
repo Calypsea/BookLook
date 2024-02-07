@@ -20,15 +20,21 @@ import { ThemeContext } from "../context/ViewMode";
 import LoadingSpinner from "../sm_components/Spinner";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {db} from '../../config/firebase';
-import { doc,getDocs, deleteDoc, addDoc, collection,getCountFromServer, query, where, documentId } from "firebase/firestore"; 
+import { db } from "../../config/firebase";
+import {
+  doc,
+  getDocs,
+  deleteDoc,
+  addDoc,
+  collection,
+  getCountFromServer,
+  query,
+  where,
+  documentId,
+} from "firebase/firestore";
 
 
-//BUGS
-// if user types in only an author, doesnt fetch because i had
-// to change the + in +inauthor:... to & so searchParams scans the query
-// properly. Fix this somehow babygirl.
-
+//-----------------------
 // 1. I need to use seartchParams to get all queries that are currently
 //in the url. ++
 // 2. I have all the queries in a url. Now i need to feed this query object
@@ -37,16 +43,10 @@ import { doc,getDocs, deleteDoc, addDoc, collection,getCountFromServer, query, w
 export default function Browse() {
   const { mode } = useContext(ThemeContext);
 
-  // const getFavouritesFromLocal = localStorage.getItem('favourites');
-  // const favouriteArrayFromLocal = JSON.parse(getFavouritesFromLocal);
-  const [userUID, setUserUID ]  = useState<string>();
+  const [userUID, setUserUID] = useState<string>();
   const auth = getAuth();
-  // console.log(auth.currentUser?.uid);
-  onAuthStateChanged(auth, (user) => 
-  {
-    if (user) 
-    {
-     
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
     }
   });
 
@@ -56,7 +56,6 @@ export default function Browse() {
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  // const [favouritesArray, setFavouritesArray] = useState<Book[]>([]);
   const [formData, setFormData] = useState<Form>({
     bookTitle: "",
     bookAuthor: "",
@@ -64,7 +63,6 @@ export default function Browse() {
     fetchAmount: "20",
     language: "",
   });
-  //https://developers.google.com/books/docs/v1/using
   interface Form {
     bookTitle: string;
     bookAuthor: string;
@@ -145,7 +143,6 @@ export default function Browse() {
 
       setDisplayBooks(displayBooks);
     }
-
   }, [bookData, formData.fetchAmount]);
 
   const API_KEY: string | undefined = process.env.REACT_APP_RAPID_API_KEY;
@@ -178,23 +175,21 @@ export default function Browse() {
     params[key] = value;
   });
 
-  
   const navigate = useNavigate();
   const [URLquery, setURLQuery] = useState("");
- 
+
   async function fetchBooks() {
     try {
-     
       setIsLoading(true);
       const query: string =
         formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
       const authorQuery: string =
-        formData.bookAuthor !== "" ? `&inauthor=${formData.bookAuthor}` : "";
+        formData.bookAuthor !== "" ? `inauthor=${formData.bookAuthor}` : "";
       const languageQuery: string =
         formData.language !== "" ? `&langRestrict=${formData.language}` : "";
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${query}` +
-          authorQuery +
+          (query !== "" ? authorQuery :  authorQuery.substring(1)) +
           `&startIndex=${pageNumber}` +
           `&maxResults=40` +
           languageQuery +
@@ -215,14 +210,13 @@ export default function Browse() {
       setIsLoading(false);
       setIsAdvancedSearch(false);
       window.scrollTo(0, 550);
-      
+
       // }
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }
-  // console.log(bookData);
   React.useEffect(() => {
     navigate(`/browse${URLquery}`);
   }, [URLquery]);
@@ -251,12 +245,9 @@ export default function Browse() {
       formData.bookAuthor === ""
       /* || formData.bookTitle === "" &&
     formData.keyword === ""*/
-    ) 
-    {
+    ) {
       setFormWarningCheck(true);
-    } 
-    else 
-    {
+    } else {
       setFormWarningCheck(false);
       fetchBooks();
     }
@@ -282,6 +273,7 @@ export default function Browse() {
       );
       const data = await response.json();
       setBookData(data.items);
+      setTotalItems(data.totalItems);
       setIsLoading(false);
       setIsAdvancedSearch(false);
       window.scrollTo(0, 750);
@@ -291,109 +283,67 @@ export default function Browse() {
     }
   }
 
-  //favourites array
-  // const [bookListID, setBookListID] = useState("0");
-  // React.useEffect(() => {
-  //   const getFavouriteBooks = async() => {
-  //     try{
-        
-  //       const data = await getDocs(favouriteListCollection);
-  //       const filteredData: List[] = data.docs.map((doc) => {
-  //         const docData = doc.data() as List; 
-  //         return { ...docData, id: doc.id };
-  //       });
-  //       console.log(filteredData);
-  //       setFavouritesList(filteredData);
-  //       console.log(favouriteslist)
-  //     }
-  //     catch(err)
-  //     {
-  //       console.error(err);
-  //     }
-
-  //   }
-
-  //   getFavouriteBooks();
-  // }, [])
-  const [favouriteslist, setFavouritesList] = React.useState<List[]>([{
-    bookid: "",
-    id: "",
-    uid: "",
-  }]);
+  const [favouriteslist, setFavouritesList] = React.useState<List[]>([
+    {
+      bookid: "",
+      id: "",
+      uid: "",
+    },
+  ]);
 
   interface List {
     bookid: string;
     id: string;
     uid: string;
   }
-  async function bookExists(bookid: string, id :string): Promise<boolean> {
-    const snap = await getCountFromServer(query(
-      collection(db, 'favouriteLists'), where("bookid", '==', bookid), where("uid", "==", id )
-    ))
-    console.log(!!snap.data().count);
+  async function bookExists(bookid: string, id: string): Promise<boolean> {
+    const snap = await getCountFromServer(
+      query(
+        collection(db, "favouriteLists"),
+        where("bookid", "==", bookid),
+        where("uid", "==", id)
+      )
+    );
     return !!snap.data().count;
   }
-  async function handleFavouriteArrays(book:Book) 
-  {
-    try
-    {
-
-      if(auth.currentUser?.uid)
-      {
-        if(await bookExists(book.id, auth.currentUser.uid))
-        {
+  async function handleFavouriteArrays(book: Book) {
+    try {
+      if (auth.currentUser?.uid) {
+        if (await bookExists(book.id, auth.currentUser.uid)) {
           console.log("this book already exists");
           const q = query(
-            collection(db, 'favouriteLists'),
-            where('bookid', '==', book.id),
-            where('uid', '==', auth.currentUser?.uid)
+            collection(db, "favouriteLists"),
+            where("bookid", "==", book.id),
+            where("uid", "==", auth.currentUser?.uid)
           );
           const querySnapshot = await getDocs(q);
           let documentId;
           querySnapshot.forEach((doc) => {
             documentId = doc.id;
           });
-          console.log(documentId);
-          if(documentId)
-          {
+          if (documentId) {
             await deleteDoc(doc(db, "favouriteLists", documentId));
           }
-        }
-        else 
-        {
+        } else {
           await addDoc(collection(db, "favouriteLists"), {
             bookid: book.id,
-            uid: auth.currentUser?.uid
+            uid: auth.currentUser?.uid,
           });
-          
         }
-      }
-      else 
-      {
+      } else {
         console.log("user isn't logged in");
       }
-
-      
-    }
-    catch(err)
-    {
+    } catch (err) {
       console.error(err);
     }
-    
+  }
 
-  };
-
-
-  
-  
- 
- 
   return (
     <main id={mode}>
       <div className="browseBody">
         <h2>
-          Find a book or two that you have liked previously, add it to your
-          favourited list and we will offer you something similar!
+          Find a book or two that you have liked previously or would like to read and add it to your
+          favourited list!
         </h2>
         <div className="searchContainer">
           <div className="links">
