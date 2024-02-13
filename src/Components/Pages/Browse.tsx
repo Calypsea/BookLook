@@ -55,6 +55,7 @@ export default function Browse() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [displayBooks, setDisplayBooks] = useState<JSX.Element[]>([]);
   const [bookData, setBookData] = useState([]);
+  const [isGenreSearch, setIsGenreSearch] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [formData, setFormData] = useState<Form>({
     bookTitle: "",
@@ -164,7 +165,15 @@ export default function Browse() {
   }
   React.useEffect(() => {
     if (bookData.length > 0) {
-      fetchBooks();
+      if(isGenreSearch)
+      {
+        handleFilterSearch();
+      }
+      else 
+      {
+        fetchBooks();
+
+      }
     }
   }, [pageNumber]);
 
@@ -180,6 +189,7 @@ export default function Browse() {
 
   async function fetchBooks() {
     try {
+      setIsGenreSearch(false);
       setIsLoading(true);
       const query: string =
         formData.bookTitle !== "" ? formData.bookTitle : formData.keyword;
@@ -210,7 +220,6 @@ export default function Browse() {
       setIsLoading(false);
       setIsAdvancedSearch(false);
       window.scrollTo(0, 550);
-
       // }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -265,10 +274,12 @@ export default function Browse() {
 
   async function handleFilterSearch() {
     try {
+      setIsGenreSearch(true);
       setIsLoading(true);
       const response = await fetch(
         `${BASE_URL}v1/volumes?q=${selectedGenresString}` +
-          `&maxResults=20` +
+        `&startIndex=${pageNumber}` +
+          `&maxResults=40` +
           `&key=${API_KEY}`
       );
       const data = await response.json();

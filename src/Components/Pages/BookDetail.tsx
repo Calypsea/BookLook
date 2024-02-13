@@ -66,20 +66,13 @@ export default function BookDetail() {
   }
   let shortenedDescription = truncateDescription(description, 500);
 
-  // const handleFavourites = () => {
-  //   if (handleFavouriteArrays) {
-  //     handleFavouriteArrays(book);
-  //     console.log("hi")
-  //   }
-  // }
+ 
   return (
     <div id={mode}>
       <main className={`bookDetails`} id={mode}>
         <div className="bookLeftColumn">
           <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
-          <button className={`primaryButton button${mode}`} >
-            {state?.favourite ? " Favourited": "Want to read"}
-          </button>
+          
           {infoLink !== "" ? (
             <a
               href={infoLink}

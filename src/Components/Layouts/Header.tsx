@@ -34,7 +34,7 @@ export default function Header() {
   const LoggedInDropdownMenu:any = (
     <Dropdown.Menu>
      
-      <Dropdown.Item href="/login" onClick={logout} className="DropdownMenu">
+      <Dropdown.Item href="/#/login" onClick={logout} className="DropdownMenu">
         Log Out
       </Dropdown.Item>
     </Dropdown.Menu>
@@ -43,7 +43,7 @@ export default function Header() {
 
   const LoggedOutDropdownMenu:any = (
     <Dropdown.Menu>
-      <Dropdown.Item  href="/login"className="DropdownMenu">
+      <Dropdown.Item  href="/#/login"className="DropdownMenu">
         Login
       </Dropdown.Item>
     </Dropdown.Menu>

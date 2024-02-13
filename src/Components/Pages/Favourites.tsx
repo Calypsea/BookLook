@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import './Favourites.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ThemeContext } from "../context/ViewMode";
 import {db} from '../../config/firebase';
 import { doc,getDocs, deleteDoc,getCountFromServer, collection, query, where } from "firebase/firestore"; 
@@ -15,6 +15,7 @@ export default function Favourites(props: any)
     const {mode} = React.useContext(ThemeContext)
      const [isLoading, setIsLoading] = useState<boolean>(false);
     const [displayBooks, setDisplayBooks] = React.useState<JSX.Element[]>([]);
+    const [noBookMessage, setNoBookMessage] = React.useState<JSX.Element | null>(null);
     const [favouriteBooks, setFavouriteBooks] = React.useState<Book[]>([]);
     const [bookCount, setBookCount] = React.useState(0);
     const [favouriteslist, setFavouritesList] = React.useState<List[]>([{
@@ -59,7 +60,6 @@ export default function Favourites(props: any)
     
 
 
-    console.log("user: " , auth.currentUser?.uid);
     React.useEffect(() => {
       onAuthStateChanged(auth, (user) => {
         if(user) 
@@ -110,7 +110,19 @@ export default function Favourites(props: any)
       
     }, [  bookCount]);
     React.useEffect(()=> {
-      
+      if(favouriteBooks.length === 0)
+      {
+        setNoBookMessage(
+          <div className="noFavText">
+            <p>You have no favourite books!</p>
+            <Link className={`browseLink browseLink${mode} `} to="../browse">Go Browse</Link>
+          </div>
+        );
+      }
+      else 
+      {
+        setNoBookMessage(null)
+      }
       if(favouriteBooks.length >= 0)
       {
 
@@ -161,6 +173,9 @@ export default function Favourites(props: any)
         setDisplayBooks(displayBooks);
         
       }
+      
+       
+      
      
       
 
@@ -209,6 +224,7 @@ export default function Favourites(props: any)
         <main id={mode}>
            <section className="favouriteBooks">
              <h2 className='favouriteHeader'>Your Favourited books: </h2>
+             {noBookMessage}
               {displayBooks}
               {greetingMessage}
            </section>

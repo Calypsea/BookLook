@@ -7,3 +7,30 @@
     margin: 0 auto;
     width: 80%;
 }
+.browseLink
+{
+    text-decoration: none;
+    padding-bottom: 4px;
+    color: white;
+}
+.browseLinklight
+{
+    color: #716666;
+}
+.browseLinklight:hover
+{
+    color: #692E5D;
+}
+.browseLinkdark:hover
+{
+    color: #E48AD2;
+}
+.noFavText
+{
+    padding: 20px;
+}
+.noFavButton
+{
+    width: 150px;
+    padding: 10px 10px;
+}

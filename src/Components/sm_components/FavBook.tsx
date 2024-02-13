@@ -66,7 +66,7 @@ export default function FavBook(props: any) {
         >
           {title}
         </Link>
-
+<p>{id}</p>
         <p>{subtitle}</p>
         <p className="author">{authors}</p>
         <p>{shortenedDescription}</p>
