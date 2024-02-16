@@ -111,3 +111,17 @@ nav
     align-self: center;
     margin-right: 30px;
 }
+.navMenuMobile
+{
+    position: fixed;
+    bottom: 77px;
+}
+.mobileLink
+{
+    all: unset;
+    color: grey;
+}
+.mobileLink:hover 
+{
+    color: black;
+}

@@ -1,5 +1,5 @@
 import "./Book.css";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../context/ViewMode";
 import {
@@ -12,6 +12,16 @@ import { db } from "../../config/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Book(props: any) {
+
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 768px)").matches
+  )
+
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 768px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
   const { mode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
@@ -77,36 +87,69 @@ export default function Book(props: any) {
   }
   let shortenedDescription = truncateDescription(description, 200);
   return (
-    <div key={id} className={`bookElement background${mode}`}>
-      <div className="bookImage">
-        <img src={imageSource} alt="" className="bookImg" />
-      </div>
-      <div className="bookText">
-        <Link
-          to={id}
-          state={{
-            book: props.book,
-            url: props.url,
-            favourite: isFavourite,
-            // handleFavouriteArrays: props.handleClick,
-          }}
-          className="bookTitle"
-        >
-          {title}
-        </Link>
-
-        <p>{subtitle}</p>
-        <p className="author">{authors}</p>
-        <p>{shortenedDescription}</p>
-        <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
-        <button
-          onClick={handleFavouriteActions}
-          className={`primaryButton button${mode} smallButton`}
-        >
-          {isFavourite ? `Unfavourite` : `Want to read`}
-        </button>
-        <p className="warningmsg">{warningMessage}</p>
-      </div>
-    </div>
+    <section>
+     {matches && ( <div key={id} className={`bookElement background${mode}`}>
+        <div className="bookImage">
+          <img src={imageSource} alt="" className="bookImg" />
+        </div>
+        <div className="bookText">
+          <Link
+            to={id}
+            state={{
+              book: props.book,
+              url: props.url,
+              favourite: isFavourite,
+              // handleFavouriteArrays: props.handleClick,
+            }}
+            className="bookTitle"
+          >
+            {title}
+          </Link>
+          <p>{subtitle}</p>
+          <p className="author">{authors}</p>
+          <p>{shortenedDescription}</p>
+          <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
+          <button
+            onClick={handleFavouriteActions}
+            className={`primaryButton button${mode} smallButton`}
+          >
+            {isFavourite ? `Unfavourite` : `Want to read`}
+          </button>
+          <p className="warningmsg">{warningMessage}</p>
+        </div>
+      </div>)}
+      {!matches && (<div key={id} className={`bookElement background${mode}`}>
+        <div>
+          <div className="bookImage">
+            <img src={imageSource} alt="" className="bookImg" />
+          </div>
+          <div className="bookText">
+            <Link
+              to={id}
+              state={{
+                book: props.book,
+                url: props.url,
+                favourite: isFavourite,
+                // handleFavouriteArrays: props.handleClick,
+              }}
+              className="bookTitle"
+            >
+              {title}
+            </Link>
+            <p>{subtitle}</p>
+            <p className="author">{authors}</p>
+            <p>{shortenedDescription}</p>
+            <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
+            <button
+              onClick={handleFavouriteActions}
+              className={`primaryButton button${mode} smallButton`}
+            >
+              {isFavourite ? `Unfavourite` : `Want to read`}
+            </button>
+            <p className="warningmsg">{warningMessage}</p>
+          </div>
+        </div>
+      </div>)}
+    </section>
   );
 }

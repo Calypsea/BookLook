@@ -34,14 +34,18 @@ import {
 } from "firebase/firestore";
 
 
-//-----------------------
-// 1. I need to use seartchParams to get all queries that are currently
-//in the url. ++
-// 2. I have all the queries in a url. Now i need to feed this query object
-// to the fetchData function. Fetch function has to check if this
-// object is empty or not. If not, fetch using the quey.
 export default function Browse() {
   const { mode } = useContext(ThemeContext);
+
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 768px)").matches
+  )
+
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 768px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
 
   const [userUID, setUserUID] = useState<string>();
   const auth = getAuth();
@@ -351,7 +355,7 @@ export default function Browse() {
 
   return (
     <main id={mode}>
-      <div className="browseBody">
+      {matches && (<div className="browseBody">
         <h2>
           Find a book or two that you have liked previously or would like to read and add it to your
           favourited list!
@@ -540,7 +544,199 @@ export default function Browse() {
             </div>
           )}
         </div>
-      </div>
+      </div>)}
+
+      {!matches && (<div className="browseBody">
+        <h2>
+          Find a book or two that you have liked previously or would like to read and add it to your
+          favourited list!
+        </h2>
+        <div className="searchContainer">
+          <div className="links">
+            <button
+              className={
+                advancedSearchIsOpen
+                  ? `linkHover currentlyOpen${mode}`
+                  : `linkHover${mode}`
+              }
+              onClick={() => setAdvancedSearchIsOpen(true)}
+            >
+              I know what books i like
+            </button>
+            <button
+              className={
+                !advancedSearchIsOpen
+                  ? `linkHover currentlyOpen${mode}`
+                  : `linkHover${mode}`
+              }
+              onClick={() => setAdvancedSearchIsOpen(false)}
+            >
+              I would like some guidance
+            </button>
+          </div>
+          {advancedSearchIsOpen && (
+            <form onSubmit={handleSubmit} className={`formContainer${mode}`}>
+              <div className="titleContainer mobTitleContainer">
+                  <div className="mobileContainer">
+                    <div className="titleInput">
+                      <label htmlFor="bookTitle">Book title</label>
+                      <input
+                        id="bookTitle"
+                        className="primaryInput"
+                        type="text"
+                        name="bookTitle"
+                        placeholder="Book title"
+                        value={formData.bookTitle}
+                        onChange={handleChange}
+                      />
+                      {formWarningCheck && !isAdvancedSearch ? formWarning : ""}
+                    </div>
+                    <button disabled={isAdvancedSearch ? true : false}>
+                      <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        style={{ color: "#ffffff" }}
+                        size="xl"
+                      />
+                    </button>
+                  </div>
+                
+                <button
+                  id="advancedSearch mobileAdvancedSearch"
+                  type="button"
+                  onClick={handleAdvancedSearch}
+                >
+                  Advanced Search
+                  <FontAwesomeIcon
+                    className="arrow"
+                    icon={isAdvancedSearch ? faChevronUp : faChevronDown}
+                    size="xs"
+                    style={{ color: mode === "dark" ? "#ffffff" : "#3f3939" }}
+                  />
+                </button>
+              </div>
+
+              <div
+                className={
+                  isAdvancedSearch ? "advancedSearch" : "advancedSearch hidden"
+                }
+              >
+                <div className="topFormContainer">
+                  <div className="authorKeywordContainer">
+                    <label htmlFor="author">Book author</label>
+                    <input
+                      id="author"
+                      className="primaryInput"
+                      type="text"
+                      name="bookAuthor"
+                      placeholder="Book author"
+                      value={formData.bookAuthor}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="keyw">Keyword</label>
+                    <input
+                      id="keyw"
+                      className="primaryInput"
+                      type="text"
+                      name="keyword"
+                      placeholder="Keyword"
+                      value={formData.keyword}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="lang">Language</label>
+                    <select
+                      id="lang"
+                      className="primaryInput"
+                      name="language"
+                      // id="data"
+                      value={formData.language}
+                      onChange={handleChange}
+                    >
+                      <option className="selectOption" value="All">
+                        All Languages
+                      </option>
+                      <option value="en">English</option>
+                      <option value="ar">Arabic</option>
+                      <option value="zh">Chinese</option>
+                      <option value="da">Danish</option>
+                      <option value="fr">French</option>
+                      <option value="de">German</option>
+                      <option value="it">Italian</option>
+                      <option value="ja">Japanese</option>
+                      <option value="ko">Korean</option>
+                      <option value="la">Latin</option>
+                      <option value="lt">Lithuanian</option>
+                      <option value="pl">Polish</option>
+                      <option value="ru">Russian</option>
+                      <option value="es">Spanish</option>
+                    </select>
+                  </div>
+                  
+                </div>
+
+                {formWarningCheck && isAdvancedSearch ? formWarning : ""}
+                <button className={`primaryButton formButton button${mode}`}>
+                  Search
+                </button>
+              </div>
+            </form>
+          )}
+
+          {!advancedSearchIsOpen && (
+            <section>
+              <div className={`formContainer${mode} two`}>
+                <p>What do you look for in a book?</p>
+                <Genre onSelection={handleSelectedGenres} />
+                <button
+                  onClick={handleFilterSearch}
+                  className={`primaryButton formButton button${mode}`}
+                >
+                  Search
+                </button>
+              </div>
+              {/* {filterElements} */}
+            </section>
+          )}
+          {bookData.length > 0 && (
+            <div className="totalResults">
+              <div className="results">
+                <p>Results per page: </p>
+                <select
+                  className="fetchAmount"
+                  name="fetchAmount"
+                  value={formData.fetchAmount}
+                  onChange={handleChange}
+                >
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                </select>
+              </div>
+              <p>Total results: {totalItems}</p>
+            </div>
+          )}
+          {isLoading ? <LoadingSpinner /> : displayBooks}
+          {bookData.length > 0 && (
+            <div className="pageTurnButton">
+              {pageNumber !== 0 ? (
+                <button
+                  className={`primaryButton previousPageButton page${mode}`}
+                  onClick={handlePreviousPage}
+                >
+                  Previous Page
+                </button>
+              ) : (
+                ""
+              )}
+              <button
+                className={`primaryButton nextPageButton page${mode}`}
+                onClick={handlePageChange}
+              >
+                Next Page
+              </button>
+            </div>
+          )}
+        </div>
+      </div>)}
     </main>
   );
 }

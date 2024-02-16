@@ -7,6 +7,16 @@
     padding-top: 50px;
     gap: 50px;
 }
+.mobileButton
+{
+    width: 50vw;
+    margin: 0px auto;
+
+}
+.mainMobile
+{
+    padding: 25px;
+}
 .bookDetailImg
 {
     width: 200px;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './Favourites.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate, Link } from 'react-router-dom';
@@ -23,7 +23,16 @@ export default function Favourites(props: any)
       id: "",
       uid: "",
     }]);
-
+    const [matches, setMatches] = useState(
+      window.matchMedia("(min-width: 768px)").matches
+    )
+  
+    useEffect(() => {
+      window
+      .matchMedia("(min-width: 768px)")
+      .addEventListener('change', e => setMatches( e.matches ));
+    }, []);
+    const [showMore, setShowMore] = React.useState(false);
     interface List {
       bookid: string;
       id: string;
@@ -225,7 +234,8 @@ export default function Favourites(props: any)
            <section className="favouriteBooks">
              <h2 className='favouriteHeader'>Your Favourited books: </h2>
              {noBookMessage}
-              {displayBooks}
+              {matches && displayBooks}
+              {!matches && displayBooks}
               {greetingMessage}
            </section>
         </main>

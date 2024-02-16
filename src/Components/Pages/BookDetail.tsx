@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ViewMode";
 import { useParams, useLocation, Link } from "react-router-dom";
 
@@ -22,7 +22,15 @@ interface Book {
 }
 export default function BookDetail() {
   const { mode } = useContext(ThemeContext);
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 768px)").matches
+  )
 
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 768px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
   const [showMore, setShowMore] = React.useState(false);
 
   let { state } = useLocation();
@@ -69,7 +77,7 @@ export default function BookDetail() {
  
   return (
     <div id={mode}>
-      <main className={`bookDetails`} id={mode}>
+      {matches && (<main className={`bookDetails`} id={mode}>
         <div className="bookLeftColumn">
           <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
           
@@ -117,7 +125,56 @@ export default function BookDetail() {
               : ""}
           </p>
         </section>
-      </main>
+      </main>)}
+      {!matches && (<main className="mainMobile"id={mode}>
+        <div className="bookLeftColumn">
+          <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
+          
+          {infoLink !== "" ? (
+            <a
+              href={infoLink}
+              target="_blank"
+              className={`primaryButton button${mode} mobileButton`}
+            >
+              Book on Google
+            </a>
+          ) : (
+            <p></p>
+          )}
+        </div>
+        <section className="bookRightColumn">
+          
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
+          <p>{authors}</p>
+          <p className="bold">
+            {publisher ? `Published by: ${publisher}` : ""}
+          </p>
+          <p>{avgRating ? `Average rating: ${avgRating}/5` : ""}</p>
+          <p>{totalRatings ? `Total ratings: ${totalRatings}` : ""}</p>
+          <article>
+            {showMore ? description : shortenedDescription}
+            <button
+              onClick={() => {
+                setShowMore((prev) => !prev);
+              }}
+              className={`showButton`}
+              id={mode}
+            >
+              {showMore ? " Show less" : " Show more"}
+            </button>
+          </article>
+          <p>{language ? `Book language: ${language}` : ""}</p>
+          <p>{pageCount ? `Page count: ${pageCount}` : ""}</p>
+          <p>
+            {publishedDate
+              ? `Published on: ${publishedDate} ${
+                  publisher ? `by ${publisher}` : ""
+                }`
+              : ""}
+          </p>
+        </section>
+      </main>)}
     </div>
   );
 }

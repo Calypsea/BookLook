@@ -1,5 +1,5 @@
 import "./Book.css";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "../context/ViewMode";
 import {
@@ -13,6 +13,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function FavBook(props: any) {
   const { mode } = useContext(ThemeContext);
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 768px)").matches
+  )
+
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 768px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
   const {
     title,
     subtitle,
@@ -54,30 +63,59 @@ export default function FavBook(props: any) {
   }
   let shortenedDescription = truncateDescription(description, 200);
   return (
-    <div key={id} className={`bookElement background${mode}`}>
-      <div className="bookImage">
-        <img src={imageSource} alt="" className="bookImg" />
-      </div>
-      <div className="bookText">
-        <Link
-          to={`../browse/${id}`}
-          state={{ book: props.book, url: props.url }}
-          className="bookTitle"
-        >
-          {title}
-        </Link>
-<p>{id}</p>
-        <p>{subtitle}</p>
-        <p className="author">{authors}</p>
-        <p>{shortenedDescription}</p>
-        <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
-        <button
-          onClick={handleFavouriteDelete}
-          className={`primaryButton button${mode} smallButton`}
-        >
-          Unfavourite
-        </button>
-      </div>
-    </div>
+    <section>
+      {matches && (<div key={id} className={`bookElement background${mode}`}>
+        <div className="bookImage">
+          <img src={imageSource} alt="" className="bookImg" />
+        </div>
+        <div className="bookText">
+          <Link
+            to={`../browse/${id}`}
+            state={{ book: props.book, url: props.url }}
+            className="bookTitle"
+          >
+            {title}
+          </Link>
+      <p>{id}</p>
+          <p>{subtitle}</p>
+          <p className="author">{authors}</p>
+          <p>{shortenedDescription}</p>
+          <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
+          <button
+            onClick={handleFavouriteDelete}
+            className={`primaryButton button${mode} smallButton`}
+          >
+            Unfavourite
+          </button>
+        </div>
+      </div>)}
+      {!matches && (<div key={id} className={`bookElement background${mode}`}>
+        <div>
+          <div className="bookImage">
+            <img src={imageSource} alt="" className="bookImg" />
+          </div>
+          <div className="bookText">
+            <Link
+              to={`../browse/${id}`}
+              state={{ book: props.book, url: props.url }}
+              className="bookTitle"
+            >
+              {title}
+            </Link>
+                <p>{id}</p>
+            <p>{subtitle}</p>
+            <p className="author">{authors}</p>
+            <p>{shortenedDescription}</p>
+            <p>{avgRating !== undefined ? `rating: ${avgRating}/5` : ""}</p>
+            <button
+              onClick={handleFavouriteDelete}
+              className={`primaryButton button${mode} smallButton`}
+            >
+              Unfavourite
+            </button>
+          </div>
+                </div>
+        </div>)}
+    </section>
   );
 }

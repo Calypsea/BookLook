@@ -71,6 +71,15 @@ label
     margin-bottom: 40px;
     
 }
+.mobTitleContainer
+{
+    flex-direction: column;
+}
+.mobileContainer
+{
+    display: flex;
+
+}
 .titleContainer button
 {
     all: unset;
@@ -79,12 +88,14 @@ label
     margin-left: 15px;
     
 }
+
 #advancedSearch
 {
     
     margin-left: 55px;
     
 }
+
 .arrow
 {
     margin-left: 0.3rem;
