@@ -4,7 +4,7 @@ header
     justify-content: space-between;
     align-items: center;
     
-    padding: 10px 50px;
+    padding: 10px 25px;
 }
 .link
 {
@@ -73,6 +73,7 @@ nav
 .headerlight
 {
     background-color: #D5C9D2;
+    
     
 }
 .headerdark

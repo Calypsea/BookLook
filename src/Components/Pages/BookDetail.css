@@ -52,3 +52,7 @@
     height: 93vh;
     padding: 50px;
 }
+.bookLeftColumn a 
+{
+    margin-bottom: 50px;
+}

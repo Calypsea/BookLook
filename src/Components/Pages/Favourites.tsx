@@ -23,15 +23,7 @@ export default function Favourites(props: any)
       id: "",
       uid: "",
     }]);
-    const [matches, setMatches] = useState(
-      window.matchMedia("(min-width: 768px)").matches
-    )
-  
-    useEffect(() => {
-      window
-      .matchMedia("(min-width: 768px)")
-      .addEventListener('change', e => setMatches( e.matches ));
-    }, []);
+    
     const [showMore, setShowMore] = React.useState(false);
     interface List {
       bookid: string;
@@ -234,8 +226,8 @@ export default function Favourites(props: any)
            <section className="favouriteBooks">
              <h2 className='favouriteHeader'>Your Favourited books: </h2>
              {noBookMessage}
-              {matches && displayBooks}
-              {!matches && displayBooks}
+              {displayBooks}
+              
               {greetingMessage}
            </section>
         </main>

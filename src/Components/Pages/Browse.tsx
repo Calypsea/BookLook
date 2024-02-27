@@ -556,8 +556,8 @@ export default function Browse() {
             <button
               className={
                 advancedSearchIsOpen
-                  ? `linkHover currentlyOpen${mode}`
-                  : `linkHover${mode}`
+                  ? `linkHover currentlyOpen${mode} mobileButton`
+                  : `linkHover${mode} mobileButton`
               }
               onClick={() => setAdvancedSearchIsOpen(true)}
             >
@@ -575,14 +575,14 @@ export default function Browse() {
             </button>
           </div>
           {advancedSearchIsOpen && (
-            <form onSubmit={handleSubmit} className={`formContainer${mode}`}>
+            <form onSubmit={handleSubmit} className={`formContainer${mode} mobileFormContainer`}>
               <div className="titleContainer mobTitleContainer">
                   <div className="mobileContainer">
                     <div className="titleInput">
                       <label htmlFor="bookTitle">Book title</label>
                       <input
                         id="bookTitle"
-                        className="primaryInput"
+                        className="primaryMobInput"
                         type="text"
                         name="bookTitle"
                         placeholder="Book title"
@@ -601,7 +601,7 @@ export default function Browse() {
                   </div>
                 
                 <button
-                  id="advancedSearch mobileAdvancedSearch"
+                  id="mobileAdvancedSearch"
                   type="button"
                   onClick={handleAdvancedSearch}
                 >
@@ -625,7 +625,7 @@ export default function Browse() {
                     <label htmlFor="author">Book author</label>
                     <input
                       id="author"
-                      className="primaryInput"
+                      className="primaryMobInput"
                       type="text"
                       name="bookAuthor"
                       placeholder="Book author"
@@ -635,7 +635,7 @@ export default function Browse() {
                     <label htmlFor="keyw">Keyword</label>
                     <input
                       id="keyw"
-                      className="primaryInput"
+                      className="primaryMobInput"
                       type="text"
                       name="keyword"
                       placeholder="Keyword"
@@ -645,7 +645,7 @@ export default function Browse() {
                     <label htmlFor="lang">Language</label>
                     <select
                       id="lang"
-                      className="primaryInput"
+                      className="primaryMobInput"
                       name="language"
                       // id="data"
                       value={formData.language}

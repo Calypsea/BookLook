@@ -52,6 +52,15 @@
     width: 300px;
     padding: 10px;
 }
+.primaryMobInput
+{
+    height: 40px;
+    border-radius: 8px;
+    border: 0px;
+    font-size: 0.9rem;
+    width: 250px;
+    padding: 10px;
+}
 .primaryInput:active, .primaryInput:focus
 {
     outline: 2px solid #E48AD2;
@@ -89,10 +98,20 @@ label
     
 }
 
+.mobileFormContainer
+{
+    padding: 10px;
+}
 #advancedSearch
 {
     
     margin-left: 55px;
+    
+}
+#mobileAdvancedSearch
+{
+    
+    margin-left: 0px;
     
 }
 
@@ -109,8 +128,8 @@ label
 .links button
 {
     all:unset;  
-    font-size: 1.4rem;
-    padding: 15px 30px;
+    font-size: 1.2rem;
+    padding: 10px 20px;
 }
 .linkHoverlight
 {
@@ -248,4 +267,8 @@ label
 .pagelight:hover
 {
     color: #716666;
+}
+.mobileButton
+{
+    font-size: 1rem;
 }
