@@ -19,12 +19,11 @@ export const ThemeProvider = ({ children }: ChildrenProps) => {
   const [mode, setMode] = useState<ThemeContextType>(
     (getThemeFromLocal as ThemeContextType) || "dark"
   );
-    React.useEffect(()=>{
-        localStorage.setItem("theme", mode);
-    },[mode])
+  React.useEffect(() => {
+    localStorage.setItem("theme", mode);
+  }, [mode]);
   const toggle = (): void => {
     setMode((prev) => (prev === "dark" ? "light" : "dark"));
-    
   };
 
   const contextValue: ThemeContextValue = {

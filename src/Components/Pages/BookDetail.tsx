@@ -24,21 +24,26 @@ export default function BookDetail() {
   const { mode } = useContext(ThemeContext);
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 768px)").matches
-  )
+  );
 
   useEffect(() => {
     window
-    .matchMedia("(min-width: 768px)")
-    .addEventListener('change', e => setMatches( e.matches ));
+      .matchMedia("(min-width: 768px)")
+      .addEventListener("change", (e) => setMatches(e.matches));
   }, []);
   const [showMore, setShowMore] = React.useState(false);
 
   let { state } = useLocation();
   const book = state?.book;
   const url = state?.url;
-  // let handleFavouriteArrays = state?.handleFavouriteArrays;
+
   if (!book) {
-    return <main id={mode} className="error"><h1>Oops! Something went wrong.</h1><p>Book information not available.</p></main>;
+    return (
+      <main id={mode} className="error">
+        <h1>Oops! Something went wrong.</h1>
+        <p>Book information not available.</p>
+      </main>
+    );
   }
   const {
     title,
@@ -74,107 +79,108 @@ export default function BookDetail() {
   }
   let shortenedDescription = truncateDescription(description, 500);
 
- 
   return (
     <div id={mode}>
-      {matches && (<main className={`bookDetails`} id={mode}>
-        <div className="bookLeftColumn">
-          <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
-          
-          {infoLink !== "" ? (
-            <a
-              href={infoLink}
-              target="_blank"
-              className={`primaryButton button${mode}`}
-            >
-              Book on Google
-            </a>
-          ) : (
-            <p></p>
-          )}
-        </div>
-        <section className="bookRightColumn">
-          
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
-          <p>{authors}</p>
-          <p className="bold">
-            {publisher ? `Published by: ${publisher}` : ""}
-          </p>
-          <p>{avgRating ? `Average rating: ${avgRating}/5` : ""}</p>
-          <p>{totalRatings ? `Total ratings: ${totalRatings}` : ""}</p>
-          <article>
-            {showMore ? description : shortenedDescription}
-            <button
-              onClick={() => {
-                setShowMore((prev) => !prev);
-              }}
-              className={`showButton`}
-              id={mode}
-            >
-              {showMore ? " Show less" : " Show more"}
-            </button>
-          </article>
-          <p>{language ? `Book language: ${language}` : ""}</p>
-          <p>{pageCount ? `Page count: ${pageCount}` : ""}</p>
-          <p>
-            {publishedDate
-              ? `Published on: ${publishedDate} ${
-                  publisher ? `by ${publisher}` : ""
-                }`
-              : ""}
-          </p>
-        </section>
-      </main>)}
-      {!matches && (<main className="mainMobile"id={mode}>
-        <div className="bookLeftColumn">
-          <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
-          
-          {infoLink !== "" ? (
-            <a
-              href={infoLink}
-              target="_blank"
-              className={`primaryButton button${mode} mobileButton`}
-            >
-              Book on Google
-            </a>
-          ) : (
-            <p></p>
-          )}
-        </div>
-        <section className="bookRightColumn">
-          
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
-          <p>{authors}</p>
-          <p className="bold">
-            {publisher ? `Published by: ${publisher}` : ""}
-          </p>
-          <p>{avgRating ? `Average rating: ${avgRating}/5` : ""}</p>
-          <p>{totalRatings ? `Total ratings: ${totalRatings}` : ""}</p>
-          <article>
-            {showMore ? description : shortenedDescription}
-            <button
-              onClick={() => {
-                setShowMore((prev) => !prev);
-              }}
-              className={`showButton`}
-              id={mode}
-            >
-              {showMore ? " Show less" : " Show more"}
-            </button>
-          </article>
-          <p>{language ? `Book language: ${language}` : ""}</p>
-          <p>{pageCount ? `Page count: ${pageCount}` : ""}</p>
-          <p>
-            {publishedDate
-              ? `Published on: ${publishedDate} ${
-                  publisher ? `by ${publisher}` : ""
-                }`
-              : ""}
-          </p>
-        </section>
-      </main>)}
+      {matches && (
+        <main className={`bookDetails`} id={mode}>
+          <div className="bookLeftColumn">
+            <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
+
+            {infoLink !== "" ? (
+              <a
+                href={infoLink}
+                target="_blank"
+                className={`primaryButton button${mode}`}
+              >
+                Book on Google
+              </a>
+            ) : (
+              <p></p>
+            )}
+          </div>
+          <section className="bookRightColumn">
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+            <p>{authors}</p>
+            <p className="bold">
+              {publisher ? `Published by: ${publisher}` : ""}
+            </p>
+            <p>{avgRating ? `Average rating: ${avgRating}/5` : ""}</p>
+            <p>{totalRatings ? `Total ratings: ${totalRatings}` : ""}</p>
+            <article>
+              {showMore ? description : shortenedDescription}
+              <button
+                onClick={() => {
+                  setShowMore((prev) => !prev);
+                }}
+                className={`showButton`}
+                id={mode}
+              >
+                {showMore ? " Show less" : " Show more"}
+              </button>
+            </article>
+            <p>{language ? `Book language: ${language}` : ""}</p>
+            <p>{pageCount ? `Page count: ${pageCount}` : ""}</p>
+            <p>
+              {publishedDate
+                ? `Published on: ${publishedDate} ${
+                    publisher ? `by ${publisher}` : ""
+                  }`
+                : ""}
+            </p>
+          </section>
+        </main>
+      )}
+      {!matches && (
+        <main className="mainMobile" id={mode}>
+          <div className="bookLeftColumn">
+            <img className="bookImg bookDetailImg" src={imageLinks.thumbnail} />
+
+            {infoLink !== "" ? (
+              <a
+                href={infoLink}
+                target="_blank"
+                className={`primaryButton button${mode} mobileButton`}
+              >
+                Book on Google
+              </a>
+            ) : (
+              <p></p>
+            )}
+          </div>
+          <section className="bookRightColumn">
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+            <p>{authors}</p>
+            <p className="bold">
+              {publisher ? `Published by: ${publisher}` : ""}
+            </p>
+            <p>{avgRating ? `Average rating: ${avgRating}/5` : ""}</p>
+            <p>{totalRatings ? `Total ratings: ${totalRatings}` : ""}</p>
+            <article>
+              {showMore ? description : shortenedDescription}
+              <button
+                onClick={() => {
+                  setShowMore((prev) => !prev);
+                }}
+                className={`showButton`}
+                id={mode}
+              >
+                {showMore ? " Show less" : " Show more"}
+              </button>
+            </article>
+            <p>{language ? `Book language: ${language}` : ""}</p>
+            <p>{pageCount ? `Page count: ${pageCount}` : ""}</p>
+            <p>
+              {publishedDate
+                ? `Published on: ${publishedDate} ${
+                    publisher ? `by ${publisher}` : ""
+                  }`
+                : ""}
+            </p>
+          </section>
+        </main>
+      )}
     </div>
   );
 }
