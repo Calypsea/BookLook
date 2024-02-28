@@ -39,13 +39,13 @@ export default function Header() {
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const LoggedInDropdownMenu: any = (
-    <Dropdown.Item href="/#/login" onClick={logout} className="DropdownMenu">
+    <Dropdown.Item href="BookLook/#/login" onClick={logout} className="DropdownMenu">
       Log Out
     </Dropdown.Item>
   );
 
   const LoggedOutDropdownMenu: any = (
-    <Dropdown.Item href="/#/login" className="DropdownMenu">
+    <Dropdown.Item href="BookLook/#/login" className="DropdownMenu">
       Login
     </Dropdown.Item>
   );
@@ -162,16 +162,16 @@ export default function Header() {
                 ></img>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item href="/#/" className="DropdownMenu">
+                <Dropdown.Item href="BookLook/#/" className="DropdownMenu">
                   Home
                 </Dropdown.Item>
-                <Dropdown.Item href="/#/about" className="DropdownMenu">
+                <Dropdown.Item href="BookLook/#/about" className="DropdownMenu">
                   About
                 </Dropdown.Item>
-                <Dropdown.Item href="/#/browse" className="DropdownMenu">
+                <Dropdown.Item href="BookLook/#/browse" className="DropdownMenu">
                   Browse
                 </Dropdown.Item>
-                <Dropdown.Item href="/#/favourites" className="DropdownMenu">
+                <Dropdown.Item href="BookLook/#/favourites" className="DropdownMenu">
                   Favourites
                 </Dropdown.Item>
                 {user ? LoggedInDropdownMenu : LoggedOutDropdownMenu}
