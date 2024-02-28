@@ -159,37 +159,17 @@ export default function Header() {
               <img className="profileLogo" src={profileLogo} alt="Profile"></img>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item  className="DropdownMenu">
-                <Link
-                  to="/"
-                  className="mobileLink"
-                >
-                  Home
-                </Link>
+              <Dropdown.Item  href="/#/" className="DropdownMenu">
+                Home
               </Dropdown.Item>
-              <Dropdown.Item className="DropdownMenu">
-                <Link
-                      to="/about"
-                      className="mobileLink"
-                >
-                  About
-                </Link>
+              <Dropdown.Item href="/#/about"className="DropdownMenu">
+                About
               </Dropdown.Item>
-              <Dropdown.Item  className="DropdownMenu">
-                <Link
-                  to="/browse"
-                  className="mobileLink"
-                >
+              <Dropdown.Item href="/#/browse" className="DropdownMenu">
                   Browse
-                </Link>
               </Dropdown.Item>
-              <Dropdown.Item className="DropdownMenu">
-                <Link
-                  to="/favourites"
-                  className="mobileLink"
-                >
+              <Dropdown.Item href="/#/favourites" className="DropdownMenu">
                   Favourites
-                </Link>
               </Dropdown.Item>
               {user ? LoggedInDropdownMenu : LoggedOutDropdownMenu}
            </Dropdown.Menu>
