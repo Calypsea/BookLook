@@ -66,9 +66,6 @@ export default function Login() {
       <section className={`header${mode} formSection`}>
         <h2>Log into BookLook</h2>
 
-        <p className="testingText">email: testingtesting@gmail.com </p>
-        <p className="testingText"> password: imtesting123 </p>
-
         <form className="authorKeywordContainer">
           <label htmlFor="email">Email address</label>
           <input
